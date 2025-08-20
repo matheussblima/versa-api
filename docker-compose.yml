@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Banco de dados PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: versa-postgres
+    environment:
+      POSTGRES_DB: versa_api
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - versa-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Aplicação NestJS
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: versa-api
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/versa_api?schema=public
+      NODE_ENV: production
+    ports:
+      - '3000:3000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - versa-network
+    restart: unless-stopped
+
+  # Prisma Studio (opcional - para desenvolvimento)
+  prisma-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: versa-prisma-studio
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/versa_api?schema=public
+    ports:
+      - '5555:5555'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - versa-network
+    command:
+      ['npx', 'prisma', 'studio', '--hostname', '0.0.0.0', '--port', '5555']
+    profiles:
+      - dev
+
+volumes:
+  postgres_data:
+
+networks:
+  versa-network:
+    driver: bridge
