@@ -19,11 +19,9 @@ export class FindPontosDeMedicaoByUnidadeUseCase {
   ) {}
 
   async execute(unidadeId: string): Promise<PontoDeMedicao[]> {
-    // Primeiro, buscar todas as subunidades da unidade
     const subUnidades =
       await this.subUnidadeRepository.findByUnidadeId(unidadeId);
 
-    // Depois, buscar todos os pontos de medição das subunidades
     const pontosDeMedicao: PontoDeMedicao[] = [];
     for (const subUnidade of subUnidades) {
       const pontos = await this.pontoDeMedicaoRepository.findBySubUnidadeId(

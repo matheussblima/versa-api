@@ -15,6 +15,8 @@ import { CreatePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/create
 import { FindAllPontosDeMedicaoUseCase } from './use-cases/ponto-de-medicao/find-all-pontos-de-medicao.use-case';
 import { FindPontoDeMedicaoByIdUseCase } from './use-cases/ponto-de-medicao/find-ponto-de-medicao-by-id.use-case';
 import { FindPontosDeMedicaoByUnidadeUseCase } from './use-cases/ponto-de-medicao/find-pontos-de-medicao-by-unidade.use-case';
+import { FindPontosDeMedicaoBySubUnidadeUseCase } from './use-cases/ponto-de-medicao/find-pontos-de-medicao-by-subunidade.use-case';
+import { SearchPontosDeMedicaoCceeUseCase } from './use-cases/ponto-de-medicao/search-pontos-de-medicao-ccee.use-case';
 import { UpdatePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/update-ponto-de-medicao.use-case';
 import { DeletePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/delete-ponto-de-medicao.use-case';
 
@@ -35,6 +37,8 @@ import { DeletePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/delete
     FindAllPontosDeMedicaoUseCase,
     FindPontoDeMedicaoByIdUseCase,
     FindPontosDeMedicaoByUnidadeUseCase,
+    FindPontosDeMedicaoBySubUnidadeUseCase,
+    SearchPontosDeMedicaoCceeUseCase,
     UpdatePontoDeMedicaoUseCase,
     DeletePontoDeMedicaoUseCase,
   ],
@@ -53,6 +57,8 @@ import { DeletePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/delete
     FindAllPontosDeMedicaoUseCase,
     FindPontoDeMedicaoByIdUseCase,
     FindPontosDeMedicaoByUnidadeUseCase,
+    FindPontosDeMedicaoBySubUnidadeUseCase,
+    SearchPontosDeMedicaoCceeUseCase,
     UpdatePontoDeMedicaoUseCase,
     DeletePontoDeMedicaoUseCase,
   ],

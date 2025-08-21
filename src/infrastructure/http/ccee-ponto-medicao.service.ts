@@ -117,19 +117,20 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
       const codigoPerfilAgente = unidade.codigoCCEE;
       const soapEnvelope = this.buildSoapEnvelope(codigoPerfilAgente);
 
-      console.log('Fazendo requisição para CCEE...');
       const xmlResponse = await this.cceeApiService.post<string>(
         '/ws/v2/PontoMedicaoBSv2',
         soapEnvelope,
+        {
+          headers: {
+            'Content-Type': 'text/xml; charset=utf-8',
+            SOAPAction: 'listarPontoMedicao',
+          },
+        },
       );
 
-      console.log('Resposta XML recebida, convertendo para JSON...');
       const jsonData = await this.parseXmlToJson(xmlResponse);
 
-      console.log('Extraindo pontos de medição...');
       const pontosMedicao = this.extractPontosMedicao(jsonData);
-
-      console.log(`Encontrados ${pontosMedicao.length} pontos de medição`);
 
       for (const pontoData of pontosMedicao) {
         const pontoMedicao = PontoDeMedicao.create(
@@ -139,12 +140,8 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
         );
 
         await this.pontoMedicaoRepository.create(pontoMedicao);
-        console.log(`Ponto de medição salvo: ${pontoMedicao.nome}`);
       }
-
-      console.log('Processamento de pontos de medição concluído');
     } catch (error) {
-      console.error('Erro ao buscar e salvar pontos de medição:', error);
       throw error;
     }
   }
