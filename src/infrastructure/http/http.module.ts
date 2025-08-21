@@ -1,18 +1,23 @@
 import { Module } from '@nestjs/common';
-import { ExternalApiService } from './external-api.service';
-import { ExternalDataHttpService } from './external-data-http.service';
+import { DatabaseModule } from '../database/database.module';
 import { CceeApiService } from './ccee-api.service';
-import { EXTERNAL_DATA_SERVICE } from '../../domain/services/external-data.service';
+import { CceePontoMedicaoService } from './ccee-ponto-medicao.service';
+import { CCEE_PONTO_MEDICAO_SERVICE } from '../../domain/services/ccee-ponto-medicao.service';
 
 @Module({
+  imports: [DatabaseModule],
   providers: [
-    ExternalApiService,
     CceeApiService,
+    CceePontoMedicaoService,
     {
-      provide: EXTERNAL_DATA_SERVICE,
-      useClass: ExternalDataHttpService,
+      provide: CCEE_PONTO_MEDICAO_SERVICE,
+      useClass: CceePontoMedicaoService,
     },
   ],
-  exports: [ExternalApiService, CceeApiService, EXTERNAL_DATA_SERVICE],
+  exports: [
+    CceeApiService,
+    CceePontoMedicaoService,
+    CCEE_PONTO_MEDICAO_SERVICE,
+  ],
 })
 export class HttpModule {}

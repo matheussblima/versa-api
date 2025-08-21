@@ -17,7 +17,6 @@ import { FindPontoDeMedicaoByIdUseCase } from './use-cases/ponto-de-medicao/find
 import { FindPontosDeMedicaoByUnidadeUseCase } from './use-cases/ponto-de-medicao/find-pontos-de-medicao-by-unidade.use-case';
 import { UpdatePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/update-ponto-de-medicao.use-case';
 import { DeletePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/delete-ponto-de-medicao.use-case';
-import { SyncExternalDataUseCase } from './use-cases/sync-external-data.use-case';
 
 @Module({
   imports: [DatabaseModule, HttpModule],
@@ -38,7 +37,6 @@ import { SyncExternalDataUseCase } from './use-cases/sync-external-data.use-case
     FindPontosDeMedicaoByUnidadeUseCase,
     UpdatePontoDeMedicaoUseCase,
     DeletePontoDeMedicaoUseCase,
-    SyncExternalDataUseCase,
   ],
   exports: [
     CreateUnidadeUseCase,
@@ -57,7 +55,6 @@ import { SyncExternalDataUseCase } from './use-cases/sync-external-data.use-case
     FindPontosDeMedicaoByUnidadeUseCase,
     UpdatePontoDeMedicaoUseCase,
     DeletePontoDeMedicaoUseCase,
-    SyncExternalDataUseCase,
   ],
 })
 export class ApplicationModule {}

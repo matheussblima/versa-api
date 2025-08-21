@@ -19,8 +19,8 @@ export class PontoDeMedicao {
     return new PontoDeMedicao(
       id || crypto.randomUUID(),
       nome,
-      descricao,
       subUnidadeId,
+      descricao,
       createdAt || new Date(),
       updatedAt || new Date(),
     );
