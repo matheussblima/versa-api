@@ -18,11 +18,10 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Versa API')
-    .setDescription('API para gerenciamento de unidades e pontos de medição')
+    .setDescription('API para gerenciamento de unidades e subunidades')
     .setVersion('1.0')
     .addTag('unidades', 'Operações relacionadas às unidades')
-    .addTag('pontos-de-medicao', 'Operações relacionadas aos pontos de medição')
-    .addTag('sync', 'Operações de sincronização')
+    .addTag('subunidades', 'Operações relacionadas às subunidades')
     .addServer('http://localhost:3000', 'Servidor de Desenvolvimento')
     .build();
 
