@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import * as fs from 'fs';
 import * as https from 'https';
+import * as forge from 'node-forge';
 
 @Injectable()
 export class CceeApiService {
@@ -17,15 +18,42 @@ export class CceeApiService {
 
     try {
       if (fs.existsSync(certPath)) {
-        httpsAgent = new https.Agent({
-          pfx: fs.readFileSync(certPath),
-          passphrase: certPassword,
-        });
+        const pfxBuffer = fs.readFileSync(certPath);
+
+        const p12Der = forge.util.decode64(pfxBuffer.toString('base64'));
+        const p12Asn1 = forge.asn1.fromDer(p12Der);
+        const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, certPassword);
+
+        const certBags = p12.getBags({
+          bagType: forge.pki.oids.certBag,
+        })[forge.pki.oids.certBag];
+        const keyBags = p12.getBags({
+          bagType: forge.pki.oids.pkcs8ShroudedKeyBag,
+        })[forge.pki.oids.pkcs8ShroudedKeyBag];
+
+        if (certBags && certBags.length > 0 && keyBags && keyBags.length > 0) {
+          const cert = certBags[0].cert;
+          const privateKey = keyBags[0].key;
+
+          const certPem = forge.pki.certificateToPem(cert);
+          const keyPem = forge.pki.privateKeyToPem(privateKey);
+
+          httpsAgent = new https.Agent({
+            cert: certPem,
+            key: keyPem,
+            rejectUnauthorized: false,
+            secureProtocol: 'TLSv1_2_method',
+          });
+        } else {
+          throw new Error(
+            'Não foi possível extrair certificado ou chave privada do arquivo PFX',
+          );
+        }
       } else {
-        console.warn(`Certificado não encontrado em: ${certPath}`);
+        throw new Error(`Certificado não encontrado em: ${certPath}`);
       }
     } catch (error) {
-      console.error('Erro ao carregar certificado:', error);
+      throw error;
     }
 
     this.httpClient = axios.create({
@@ -40,20 +68,15 @@ export class CceeApiService {
 
     this.httpClient.interceptors.request.use(
       (config) => {
-        console.log(
-          `Requisição CCEE: ${config.method?.toUpperCase()} ${config.url}`,
-        );
         return config;
       },
       (error) => {
-        console.error('Erro na requisição CCEE:', error);
         return Promise.reject(error);
       },
     );
 
     this.httpClient.interceptors.response.use(
       (response) => {
-        console.log(`Resposta CCEE: ${response.status} ${response.config.url}`);
         return response;
       },
       (error) => {
