@@ -10,8 +10,6 @@ export class SubUnidadeMapper {
       id: subUnidade.id,
       nome: subUnidade.nome,
       descricao: subUnidade.descricao,
-      estadoId: subUnidade.estadoId,
-      regiaoId: subUnidade.regiaoId,
       apeRemoto: subUnidade.apeRemoto,
       apeLocal: subUnidade.apeLocal,
       codigoI5: subUnidade.codigoI5,
@@ -20,7 +18,6 @@ export class SubUnidadeMapper {
       codigoConv: subUnidade.codigoConv,
       cnpj: subUnidade.cnpj,
       unidadeId: subUnidade.unidadeId,
-      pontoDeMedicaoId: subUnidade.pontoDeMedicaoId,
       createdAt: subUnidade.createdAt,
       updatedAt: subUnidade.updatedAt,
     };

@@ -24,25 +24,11 @@ export class SubUnidadeResponseDto {
   descricao?: string;
 
   @ApiProperty({
-    description: 'ID do estado',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-    required: false,
-  })
-  estadoId?: string;
-
-  @ApiProperty({
     description: 'Estado da subunidade',
     type: EstadoResponseDto,
     required: false,
   })
   estado?: EstadoResponseDto;
-
-  @ApiProperty({
-    description: 'ID da região',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-    required: false,
-  })
-  regiaoId?: string;
 
   @ApiProperty({
     description: 'Região da subunidade',
@@ -105,13 +91,6 @@ export class SubUnidadeResponseDto {
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   unidadeId: string;
-
-  @ApiProperty({
-    description: 'ID do ponto de medição associado à subunidade',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-    required: false,
-  })
-  pontoDeMedicaoId?: string;
 
   @ApiProperty({
     description: 'Ponto de medição associado à subunidade',
