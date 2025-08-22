@@ -107,14 +107,14 @@ export class PontoDeMedicaoController {
     return this.findPontosDeMedicaoBySubUnidadeUseCase.execute(subUnidadeId);
   }
 
-  @Get('subunidade/:subUnidadeId/ccee')
+  @Get('ccee/:codigoCCEE')
   @ApiOperation({
-    summary: 'Pesquisar pontos de medição na CCEE por subunidade',
+    summary: 'Pesquisar pontos de medição na CCEE por código CCEE',
   })
   @ApiParam({
-    name: 'subUnidadeId',
-    description: 'ID da subunidade',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    name: 'codigoCCEE',
+    description: 'Código CCEE da unidade',
+    example: '19856455000131',
   })
   @ApiResponse({
     status: 200,
@@ -122,15 +122,11 @@ export class PontoDeMedicaoController {
     type: [PontoDeMedicaoResponseDto],
   })
   @ApiResponse({
-    status: 404,
-    description: 'Subunidade não encontrada',
-  })
-  @ApiResponse({
     status: 500,
     description: 'Erro ao conectar com a CCEE',
   })
-  searchByCcee(@Param('subUnidadeId') subUnidadeId: string) {
-    return this.searchPontosDeMedicaoCceeUseCase.execute(subUnidadeId);
+  searchByCcee(@Param('codigoCCEE') codigoCCEE: string) {
+    return this.searchPontosDeMedicaoCceeUseCase.execute(codigoCCEE);
   }
 
   @Patch(':id')

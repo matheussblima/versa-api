@@ -20,8 +20,6 @@ async function bootstrap() {
     .setTitle('Versa API')
     .setDescription('API para gerenciamento de unidades e subunidades')
     .setVersion('1.0')
-    .addTag('unidades', 'Operações relacionadas às unidades')
-    .addTag('subunidades', 'Operações relacionadas às subunidades')
     .addServer('http://localhost:3000', 'Servidor de Desenvolvimento')
     .build();
 

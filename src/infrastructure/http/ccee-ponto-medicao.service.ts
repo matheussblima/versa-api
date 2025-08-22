@@ -102,57 +102,11 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
 
   private convertCceeToPontoMedicao(
     cceePonto: CceePontoMedicao,
-    subUnidadeId: string,
   ): PontoDeMedicao {
     return PontoDeMedicao.create(
-      cceePonto.nome,
-      subUnidadeId,
-      cceePonto.tipoColeta?.codigo || cceePonto.nome,
+      cceePonto['bov2:codigo'],
+      cceePonto['bov2:nome'],
     );
-  }
-
-  async fetchPontosMedicaoBySubUnidadeId(
-    subUnidadeId: string,
-  ): Promise<PontoDeMedicao[]> {
-    try {
-      const subUnidade = await this.subUnidadeRepository.findById(subUnidadeId);
-      if (!subUnidade) {
-        throw new Error(`Subunidade com ID ${subUnidadeId} não encontrada`);
-      }
-
-      const unidade = await this.unidadeRepository.findById(
-        subUnidade.unidadeId,
-      );
-      if (!unidade) {
-        throw new Error(
-          `Unidade com ID ${subUnidade.unidadeId} não encontrada`,
-        );
-      }
-
-      const codigoPerfilAgente = unidade.codigoCCEE;
-      const soapEnvelope = this.buildSoapEnvelope(codigoPerfilAgente);
-
-      const xmlResponse = await this.cceeApiService.post<string>(
-        '/ws/v2/PontoMedicaoBSv2',
-        soapEnvelope,
-        {
-          headers: {
-            'Content-Type': 'text/xml; charset=utf-8',
-            SOAPAction: 'listarPontoMedicao',
-          },
-        },
-      );
-
-      const jsonData = await this.parseXmlToJson(xmlResponse);
-
-      const cceePontosMedicao = this.extractPontosMedicao(jsonData);
-
-      return cceePontosMedicao.map((cceePonto) =>
-        this.convertCceeToPontoMedicao(cceePonto, subUnidadeId),
-      );
-    } catch (error) {
-      throw error;
-    }
   }
 
   async fetchPontosMedicaoByCodeCcee(
@@ -175,50 +129,9 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
 
       const cceePontosMedicao = this.extractPontosMedicao(jsonData);
 
-      // Para este método, não temos subUnidadeId, então usamos um valor padrão
       return cceePontosMedicao.map((cceePonto) =>
-        this.convertCceeToPontoMedicao(cceePonto, ''),
+        this.convertCceeToPontoMedicao(cceePonto),
       );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async fetchPontosMedicaoRawBySubUnidadeId(
-    subUnidadeId: string,
-  ): Promise<CceePontoMedicao[]> {
-    try {
-      const subUnidade = await this.subUnidadeRepository.findById(subUnidadeId);
-      if (!subUnidade) {
-        throw new Error(`Subunidade com ID ${subUnidadeId} não encontrada`);
-      }
-
-      const unidade = await this.unidadeRepository.findById(
-        subUnidade.unidadeId,
-      );
-      if (!unidade) {
-        throw new Error(
-          `Unidade com ID ${subUnidade.unidadeId} não encontrada`,
-        );
-      }
-
-      const codigoPerfilAgente = unidade.codigoCCEE;
-      const soapEnvelope = this.buildSoapEnvelope(codigoPerfilAgente);
-
-      const xmlResponse = await this.cceeApiService.post<string>(
-        '/ws/v2/PontoMedicaoBSv2',
-        soapEnvelope,
-        {
-          headers: {
-            'Content-Type': 'text/xml; charset=utf-8',
-            SOAPAction: 'listarPontoMedicao',
-          },
-        },
-      );
-
-      const jsonData = await this.parseXmlToJson(xmlResponse);
-
-      return this.extractPontosMedicao(jsonData);
     } catch (error) {
       throw error;
     }
