@@ -19,6 +19,17 @@ import { FindPontosDeMedicaoBySubUnidadeUseCase } from './use-cases/ponto-de-med
 import { SearchPontosDeMedicaoCceeUseCase } from './use-cases/ponto-de-medicao/search-pontos-de-medicao-ccee.use-case';
 import { UpdatePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/update-ponto-de-medicao.use-case';
 import { DeletePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/delete-ponto-de-medicao.use-case';
+import { CreateRegiaoUseCase } from './use-cases/regiao/create-regiao.use-case';
+import { FindAllRegioesUseCase } from './use-cases/regiao/find-all-regioes.use-case';
+import { FindRegiaoByIdUseCase } from './use-cases/regiao/find-regiao-by-id.use-case';
+import { UpdateRegiaoUseCase } from './use-cases/regiao/update-regiao.use-case';
+import { DeleteRegiaoUseCase } from './use-cases/regiao/delete-regiao.use-case';
+import { CreateEstadoUseCase } from './use-cases/estado/create-estado.use-case';
+import { FindAllEstadosUseCase } from './use-cases/estado/find-all-estados.use-case';
+import { FindEstadoByIdUseCase } from './use-cases/estado/find-estado-by-id.use-case';
+import { FindEstadosByRegiaoUseCase } from './use-cases/estado/find-estados-by-regiao.use-case';
+import { UpdateEstadoUseCase } from './use-cases/estado/update-estado.use-case';
+import { DeleteEstadoUseCase } from './use-cases/estado/delete-estado.use-case';
 
 @Module({
   imports: [DatabaseModule, HttpModule],
@@ -41,6 +52,17 @@ import { DeletePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/delete
     SearchPontosDeMedicaoCceeUseCase,
     UpdatePontoDeMedicaoUseCase,
     DeletePontoDeMedicaoUseCase,
+    CreateRegiaoUseCase,
+    FindAllRegioesUseCase,
+    FindRegiaoByIdUseCase,
+    UpdateRegiaoUseCase,
+    DeleteRegiaoUseCase,
+    CreateEstadoUseCase,
+    FindAllEstadosUseCase,
+    FindEstadoByIdUseCase,
+    FindEstadosByRegiaoUseCase,
+    UpdateEstadoUseCase,
+    DeleteEstadoUseCase,
   ],
   exports: [
     CreateUnidadeUseCase,
@@ -61,6 +83,17 @@ import { DeletePontoDeMedicaoUseCase } from './use-cases/ponto-de-medicao/delete
     SearchPontosDeMedicaoCceeUseCase,
     UpdatePontoDeMedicaoUseCase,
     DeletePontoDeMedicaoUseCase,
+    CreateRegiaoUseCase,
+    FindAllRegioesUseCase,
+    FindRegiaoByIdUseCase,
+    UpdateRegiaoUseCase,
+    DeleteRegiaoUseCase,
+    CreateEstadoUseCase,
+    FindAllEstadosUseCase,
+    FindEstadoByIdUseCase,
+    FindEstadosByRegiaoUseCase,
+    UpdateEstadoUseCase,
+    DeleteEstadoUseCase,
   ],
 })
 export class ApplicationModule {}
