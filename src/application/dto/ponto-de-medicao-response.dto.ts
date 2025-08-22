@@ -9,15 +9,15 @@ export class PontoDeMedicaoResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Nome do ponto de medição',
-    example: 'Sensor de Temperatura 1',
+    description: 'Código do ponto de medição',
+    example: 'RSPKSCALADM01',
     type: String,
   })
-  nome: string;
+  codigo: string;
 
   @ApiProperty({
     description: 'Descrição do ponto de medição',
-    example: 'Sensor de temperatura na linha 1',
+    example: 'SE PARKSHOPPING CANOAS - (ADM) ALIMENTADOR 1 23 KV',
     type: String,
     nullable: true,
   })

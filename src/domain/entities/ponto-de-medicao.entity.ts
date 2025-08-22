@@ -1,7 +1,7 @@
 export class PontoDeMedicao {
   constructor(
     public readonly id: string,
-    public readonly nome: string,
+    public readonly codigo: string,
     public readonly subUnidadeId: string,
     public readonly descricao?: string,
     public readonly createdAt?: Date,
@@ -9,7 +9,7 @@ export class PontoDeMedicao {
   ) {}
 
   static create(
-    nome: string,
+    codigo: string,
     subUnidadeId: string,
     descricao?: string,
     id?: string,
@@ -18,7 +18,7 @@ export class PontoDeMedicao {
   ): PontoDeMedicao {
     return new PontoDeMedicao(
       id || crypto.randomUUID(),
-      nome,
+      codigo,
       subUnidadeId,
       descricao,
       createdAt || new Date(),

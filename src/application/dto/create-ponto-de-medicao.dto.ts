@@ -3,16 +3,16 @@ import { IsString, IsOptional, IsUUID } from 'class-validator';
 
 export class CreatePontoDeMedicaoDto {
   @ApiProperty({
-    description: 'Nome do ponto de medição',
-    example: 'Sensor de Temperatura 1',
+    description: 'Código único do ponto de medição',
+    example: 'RSPKSCALADM01',
     type: String,
   })
   @IsString()
-  nome: string;
+  codigo: string;
 
   @ApiProperty({
     description: 'Descrição do ponto de medição (opcional)',
-    example: 'Sensor de temperatura na linha 1',
+    example: 'SE PARKSHOPPING CANOAS - (ADM) ALIMENTADOR 1 23 KV',
     required: false,
     type: String,
   })

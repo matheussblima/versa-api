@@ -7,18 +7,18 @@ export class UpdatePontoDeMedicaoDto extends PartialType(
   CreatePontoDeMedicaoDto,
 ) {
   @ApiProperty({
-    description: 'Nome do ponto de medição (opcional para atualização)',
-    example: 'Sensor de Temperatura 1 - Atualizado',
+    description: 'Código único do ponto de medição (opcional para atualização)',
+    example: 'RSPKSCALADM01',
     required: false,
     type: String,
   })
   @IsOptional()
   @IsString()
-  nome?: string;
+  codigo?: string;
 
   @ApiProperty({
     description: 'Descrição do ponto de medição (opcional para atualização)',
-    example: 'Nova descrição do sensor',
+    example: 'SE PARKSHOPPING CANOAS - (ADM) ALIMENTADOR 1 23 KV',
     required: false,
     type: String,
   })

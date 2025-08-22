@@ -31,7 +31,7 @@ export class CreatePontoDeMedicaoUseCase {
     }
 
     const pontoDeMedicao = PontoDeMedicao.create(
-      dto.nome,
+      dto.codigo,
       dto.subUnidadeId,
       dto.descricao,
     );

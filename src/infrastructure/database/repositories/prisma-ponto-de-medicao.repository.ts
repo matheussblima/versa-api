@@ -13,7 +13,7 @@ export class PrismaPontoDeMedicaoRepository
     const created = await this.prisma.pontoDeMedicao.create({
       data: {
         id: pontoDeMedicao.id,
-        nome: pontoDeMedicao.nome,
+        codigo: pontoDeMedicao.codigo,
         descricao: pontoDeMedicao.descricao,
         subUnidadeId: pontoDeMedicao.subUnidadeId,
         createdAt: pontoDeMedicao.createdAt,
@@ -22,7 +22,7 @@ export class PrismaPontoDeMedicaoRepository
     });
 
     return PontoDeMedicao.create(
-      created.nome,
+      created.codigo,
       created.subUnidadeId,
       created.descricao,
       created.id,
@@ -39,7 +39,7 @@ export class PrismaPontoDeMedicaoRepository
     if (!found) return null;
 
     return PontoDeMedicao.create(
-      found.nome,
+      found.codigo,
       found.subUnidadeId,
       found.descricao,
       found.id,
@@ -53,7 +53,7 @@ export class PrismaPontoDeMedicaoRepository
 
     return found.map((item) =>
       PontoDeMedicao.create(
-        item.nome,
+        item.codigo,
         item.subUnidadeId,
         item.descricao,
         item.id,
@@ -70,7 +70,7 @@ export class PrismaPontoDeMedicaoRepository
 
     return found.map((item) =>
       PontoDeMedicao.create(
-        item.nome,
+        item.codigo,
         item.subUnidadeId,
         item.descricao,
         item.id,
@@ -87,7 +87,7 @@ export class PrismaPontoDeMedicaoRepository
     const updated = await this.prisma.pontoDeMedicao.update({
       where: { id },
       data: {
-        nome: pontoDeMedicao.nome,
+        codigo: pontoDeMedicao.codigo,
         descricao: pontoDeMedicao.descricao,
         subUnidadeId: pontoDeMedicao.subUnidadeId,
         updatedAt: new Date(),
@@ -95,7 +95,7 @@ export class PrismaPontoDeMedicaoRepository
     });
 
     return PontoDeMedicao.create(
-      updated.nome,
+      updated.codigo,
       updated.subUnidadeId,
       updated.descricao,
       updated.id,

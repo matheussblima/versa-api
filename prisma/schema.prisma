@@ -76,7 +76,7 @@ model Unidades {
 
 model PontoDeMedicao {
   id                String    @id @default(uuid())
-  nome              String
+  codigo            String    @unique
   descricao         String?
   subUnidadeId      String
   subUnidade        SubUnidade @relation(fields: [subUnidadeId], references: [id], onDelete: Cascade)

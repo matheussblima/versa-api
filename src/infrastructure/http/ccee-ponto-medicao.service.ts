@@ -15,6 +15,10 @@ import {
 import { PontoDeMedicao } from '../../domain/entities/ponto-de-medicao.entity';
 import * as xml2js from 'xml2js';
 import { ICceePontoMedicaoService } from '../../domain/services/ccee-ponto-medicao.service';
+import {
+  CceePontoMedicao,
+  CceeSoapResponse,
+} from '../../domain/types/ccee-ponto-medicao.types';
 
 @Injectable()
 export class CceePontoMedicaoService implements ICceePontoMedicaoService {
@@ -67,7 +71,7 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
 </soapenv:Envelope>`;
   }
 
-  private async parseXmlToJson(xmlData: string): Promise<any> {
+  private async parseXmlToJson(xmlData: string): Promise<CceeSoapResponse> {
     const parser = new xml2js.Parser({
       explicitArray: false,
       ignoreAttrs: true,
@@ -75,7 +79,7 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
     return await parser.parseStringPromise(xmlData);
   }
 
-  private extractPontosMedicao(jsonData: any): any[] {
+  private extractPontosMedicao(jsonData: CceeSoapResponse): CceePontoMedicao[] {
     try {
       const envelope = jsonData['soapenv:Envelope'];
       const body = envelope['soapenv:Body'];
@@ -86,7 +90,7 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
         const pontos = Array.isArray(pontosMedicao['bov2:pontoMedicao'])
           ? pontosMedicao['bov2:pontoMedicao']
           : [pontosMedicao['bov2:pontoMedicao']];
-        return pontos;
+        return pontos as CceePontoMedicao[];
       }
 
       return [];
@@ -96,9 +100,20 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
     }
   }
 
-  async fetchAndSavePontosMedicaoBySubUnidadeId(
+  private convertCceeToPontoMedicao(
+    cceePonto: CceePontoMedicao,
     subUnidadeId: string,
-  ): Promise<void> {
+  ): PontoDeMedicao {
+    return PontoDeMedicao.create(
+      cceePonto.nome,
+      subUnidadeId,
+      cceePonto.tipoColeta?.codigo || cceePonto.nome,
+    );
+  }
+
+  async fetchPontosMedicaoBySubUnidadeId(
+    subUnidadeId: string,
+  ): Promise<PontoDeMedicao[]> {
     try {
       const subUnidade = await this.subUnidadeRepository.findById(subUnidadeId);
       if (!subUnidade) {
@@ -130,17 +145,80 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
 
       const jsonData = await this.parseXmlToJson(xmlResponse);
 
-      const pontosMedicao = this.extractPontosMedicao(jsonData);
+      const cceePontosMedicao = this.extractPontosMedicao(jsonData);
 
-      for (const pontoData of pontosMedicao) {
-        const pontoMedicao = PontoDeMedicao.create(
-          pontoData['bov2:nome'] || 'Ponto de Medição',
-          subUnidadeId,
-          pontoData['bov2:codigo'] || '',
-        );
+      return cceePontosMedicao.map((cceePonto) =>
+        this.convertCceeToPontoMedicao(cceePonto, subUnidadeId),
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
 
-        await this.pontoMedicaoRepository.create(pontoMedicao);
+  async fetchPontosMedicaoByCodeCcee(
+    codeCcee: string,
+  ): Promise<PontoDeMedicao[]> {
+    try {
+      const soapEnvelope = this.buildSoapEnvelope(codeCcee);
+      const xmlResponse = await this.cceeApiService.post<string>(
+        '/ws/v2/PontoMedicaoBSv2',
+        soapEnvelope,
+        {
+          headers: {
+            'Content-Type': 'text/xml; charset=utf-8',
+            SOAPAction: 'listarPontoMedicao',
+          },
+        },
+      );
+
+      const jsonData = await this.parseXmlToJson(xmlResponse);
+
+      const cceePontosMedicao = this.extractPontosMedicao(jsonData);
+
+      // Para este método, não temos subUnidadeId, então usamos um valor padrão
+      return cceePontosMedicao.map((cceePonto) =>
+        this.convertCceeToPontoMedicao(cceePonto, ''),
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async fetchPontosMedicaoRawBySubUnidadeId(
+    subUnidadeId: string,
+  ): Promise<CceePontoMedicao[]> {
+    try {
+      const subUnidade = await this.subUnidadeRepository.findById(subUnidadeId);
+      if (!subUnidade) {
+        throw new Error(`Subunidade com ID ${subUnidadeId} não encontrada`);
       }
+
+      const unidade = await this.unidadeRepository.findById(
+        subUnidade.unidadeId,
+      );
+      if (!unidade) {
+        throw new Error(
+          `Unidade com ID ${subUnidade.unidadeId} não encontrada`,
+        );
+      }
+
+      const codigoPerfilAgente = unidade.codigoCCEE;
+      const soapEnvelope = this.buildSoapEnvelope(codigoPerfilAgente);
+
+      const xmlResponse = await this.cceeApiService.post<string>(
+        '/ws/v2/PontoMedicaoBSv2',
+        soapEnvelope,
+        {
+          headers: {
+            'Content-Type': 'text/xml; charset=utf-8',
+            SOAPAction: 'listarPontoMedicao',
+          },
+        },
+      );
+
+      const jsonData = await this.parseXmlToJson(xmlResponse);
+
+      return this.extractPontosMedicao(jsonData);
     } catch (error) {
       throw error;
     }

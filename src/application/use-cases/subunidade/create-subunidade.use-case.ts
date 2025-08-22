@@ -9,6 +9,11 @@ import {
   CCEE_PONTO_MEDICAO_SERVICE,
   ICceePontoMedicaoService,
 } from '../../../domain/services/ccee-ponto-medicao.service';
+import { PontoDeMedicao } from '../../../domain/entities/ponto-de-medicao.entity';
+import {
+  IPontoDeMedicaoRepository,
+  PONTO_DE_MEDICAO_REPOSITORY,
+} from '../../../domain/repositories/ponto-de-medicao.repository.interface';
 
 @Injectable()
 export class CreateSubUnidadeUseCase {
@@ -17,6 +22,8 @@ export class CreateSubUnidadeUseCase {
     private readonly subUnidadeRepository: SubUnidadeRepositoryInterface,
     @Inject(CCEE_PONTO_MEDICAO_SERVICE)
     private readonly cceePontoMedicaoService: ICceePontoMedicaoService,
+    @Inject(PONTO_DE_MEDICAO_REPOSITORY)
+    private readonly pontoMedicaoRepository: IPontoDeMedicaoRepository,
   ) {}
 
   async execute(dto: CreateSubUnidadeDto): Promise<SubUnidade> {
@@ -40,9 +47,22 @@ export class CreateSubUnidadeUseCase {
       await this.subUnidadeRepository.create(subUnidade);
 
     try {
-      await this.cceePontoMedicaoService.fetchAndSavePontosMedicaoBySubUnidadeId(
-        createdSubUnidade.id,
+      const pontosMedicao =
+        await this.cceePontoMedicaoService.fetchPontosMedicaoBySubUnidadeId(
+          createdSubUnidade.id,
+        );
+
+      const pontosMedicaoResponse = pontosMedicao.map((pontoMedicao) =>
+        PontoDeMedicao.create(
+          pontoMedicao.codigo,
+          createdSubUnidade.id,
+          pontoMedicao.descricao,
+        ),
       );
+
+      for (const pontoMedicao of pontosMedicaoResponse) {
+        await this.pontoMedicaoRepository.create(pontoMedicao);
+      }
     } catch (error) {
       console.error('Erro ao buscar pontos de medição do CCEE:', error);
     }
