@@ -24,13 +24,6 @@ export class PontoDeMedicaoResponseDto {
   descricao?: string;
 
   @ApiProperty({
-    description: 'ID da subunidade onde o ponto de medição está localizado',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-    type: String,
-  })
-  subUnidadeId: string;
-
-  @ApiProperty({
     description: 'Data de criação',
     example: '2024-01-01T00:00:00.000Z',
     type: Date,

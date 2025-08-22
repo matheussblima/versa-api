@@ -4,7 +4,6 @@ export interface IPontoDeMedicaoRepository {
   create(pontoDeMedicao: PontoDeMedicao): Promise<PontoDeMedicao>;
   findById(id: string): Promise<PontoDeMedicao | null>;
   findAll(): Promise<PontoDeMedicao[]>;
-  findBySubUnidadeId(subUnidadeId: string): Promise<PontoDeMedicao[]>;
   update(
     id: string,
     pontoDeMedicao: Partial<PontoDeMedicao>,

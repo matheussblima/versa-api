@@ -117,4 +117,14 @@ export class CreateSubUnidadeDto {
   })
   @IsUUID()
   unidadeId: string;
+
+  @ApiProperty({
+    description: 'ID do ponto de medição associado à subunidade',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    required: false,
+    type: String,
+  })
+  @IsOptional()
+  @IsUUID()
+  pontoDeMedicaoId?: string;
 }

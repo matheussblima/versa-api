@@ -15,7 +15,6 @@ export class PrismaPontoDeMedicaoRepository
         id: pontoDeMedicao.id,
         codigo: pontoDeMedicao.codigo,
         descricao: pontoDeMedicao.descricao,
-        subUnidadeId: pontoDeMedicao.subUnidadeId,
         createdAt: pontoDeMedicao.createdAt,
         updatedAt: pontoDeMedicao.updatedAt,
       },
@@ -23,7 +22,6 @@ export class PrismaPontoDeMedicaoRepository
 
     return PontoDeMedicao.create(
       created.codigo,
-      created.subUnidadeId,
       created.descricao,
       created.id,
       created.createdAt,
@@ -40,7 +38,6 @@ export class PrismaPontoDeMedicaoRepository
 
     return PontoDeMedicao.create(
       found.codigo,
-      found.subUnidadeId,
       found.descricao,
       found.id,
       found.createdAt,
@@ -54,24 +51,6 @@ export class PrismaPontoDeMedicaoRepository
     return found.map((item) =>
       PontoDeMedicao.create(
         item.codigo,
-        item.subUnidadeId,
-        item.descricao,
-        item.id,
-        item.createdAt,
-        item.updatedAt,
-      ),
-    );
-  }
-
-  async findBySubUnidadeId(subUnidadeId: string): Promise<PontoDeMedicao[]> {
-    const found = await this.prisma.pontoDeMedicao.findMany({
-      where: { subUnidadeId },
-    });
-
-    return found.map((item) =>
-      PontoDeMedicao.create(
-        item.codigo,
-        item.subUnidadeId,
         item.descricao,
         item.id,
         item.createdAt,
@@ -89,14 +68,12 @@ export class PrismaPontoDeMedicaoRepository
       data: {
         codigo: pontoDeMedicao.codigo,
         descricao: pontoDeMedicao.descricao,
-        subUnidadeId: pontoDeMedicao.subUnidadeId,
         updatedAt: new Date(),
       },
     });
 
     return PontoDeMedicao.create(
       updated.codigo,
-      updated.subUnidadeId,
       updated.descricao,
       updated.id,
       updated.createdAt,

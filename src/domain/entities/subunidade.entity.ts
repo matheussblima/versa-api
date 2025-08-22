@@ -1,5 +1,6 @@
 import { Estado } from './estado.entity';
 import { Regiao } from './regiao.entity';
+import { PontoDeMedicao } from './ponto-de-medicao.entity';
 
 export class SubUnidade {
   constructor(
@@ -18,6 +19,8 @@ export class SubUnidade {
     public readonly codigoI100?: string,
     public readonly codigoConv?: string,
     public readonly cnpj?: string,
+    public readonly pontoDeMedicaoId?: string,
+    public readonly pontoDeMedicao?: PontoDeMedicao,
     public readonly createdAt?: Date,
     public readonly updatedAt?: Date,
   ) {}
@@ -37,6 +40,8 @@ export class SubUnidade {
     codigoI100?: string,
     codigoConv?: string,
     cnpj?: string,
+    pontoDeMedicaoId?: string,
+    pontoDeMedicao?: PontoDeMedicao,
     id?: string,
     createdAt?: Date,
     updatedAt?: Date,
@@ -57,6 +62,8 @@ export class SubUnidade {
       codigoI100,
       codigoConv,
       cnpj,
+      pontoDeMedicaoId,
+      pontoDeMedicao,
       createdAt || new Date(),
       updatedAt || new Date(),
     );

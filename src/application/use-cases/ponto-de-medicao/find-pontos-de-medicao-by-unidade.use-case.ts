@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PontoDeMedicao } from '../../../domain/entities/ponto-de-medicao.entity';
 import {
   IPontoDeMedicaoRepository,
   PONTO_DE_MEDICAO_REPOSITORY,
@@ -8,6 +7,8 @@ import {
   SubUnidadeRepositoryInterface,
   SUBUNIDADE_REPOSITORY,
 } from '../../../domain/repositories/subunidade.repository.interface';
+import { PontoDeMedicaoResponseDto } from '../../dto/ponto-de-medicao-response.dto';
+import { PontoDeMedicaoMapper } from '../../mappers/ponto-de-medicao.mapper';
 
 @Injectable()
 export class FindPontosDeMedicaoByUnidadeUseCase {
@@ -18,16 +19,22 @@ export class FindPontosDeMedicaoByUnidadeUseCase {
     private readonly subUnidadeRepository: SubUnidadeRepositoryInterface,
   ) {}
 
-  async execute(unidadeId: string): Promise<PontoDeMedicao[]> {
+  async execute(unidadeId: string): Promise<PontoDeMedicaoResponseDto[]> {
     const subUnidades =
       await this.subUnidadeRepository.findByUnidadeId(unidadeId);
 
-    const pontosDeMedicao: PontoDeMedicao[] = [];
+    const pontosDeMedicao: PontoDeMedicaoResponseDto[] = [];
     for (const subUnidade of subUnidades) {
-      const pontos = await this.pontoDeMedicaoRepository.findBySubUnidadeId(
-        subUnidade.id,
-      );
-      pontosDeMedicao.push(...pontos);
+      if (subUnidade.pontoDeMedicaoId) {
+        const pontoDeMedicao = await this.pontoDeMedicaoRepository.findById(
+          subUnidade.pontoDeMedicaoId,
+        );
+        if (pontoDeMedicao) {
+          pontosDeMedicao.push(
+            PontoDeMedicaoMapper.toResponseDto(pontoDeMedicao),
+          );
+        }
+      }
     }
 
     return pontosDeMedicao;

@@ -55,7 +55,8 @@ model SubUnidade {
   cnpj              String?
   unidadeId String
   unidade   Unidades   @relation(fields: [unidadeId], references: [id], onDelete: Cascade)
-  pontoDeMedicao   PontoDeMedicao?
+  pontoDeMedicaoId  String?           @unique
+  pontoDeMedicao    PontoDeMedicao?   @relation(fields: [pontoDeMedicaoId], references: [id])
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -78,8 +79,7 @@ model PontoDeMedicao {
   id                String    @id @default(uuid())
   codigo            String    @unique
   descricao         String?
-  subUnidadeId      String    @unique
-  subUnidade        SubUnidade @relation(fields: [subUnidadeId], references: [id], onDelete: Cascade)
+  subUnidade        SubUnidade?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 

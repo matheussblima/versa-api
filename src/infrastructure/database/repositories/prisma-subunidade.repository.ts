@@ -25,12 +25,14 @@ export class PrismaSubUnidadeRepository
         codigoConv: subUnidade.codigoConv,
         cnpj: subUnidade.cnpj,
         unidadeId: subUnidade.unidadeId,
+        pontoDeMedicaoId: subUnidade.pontoDeMedicaoId,
         createdAt: subUnidade.createdAt,
         updatedAt: subUnidade.updatedAt,
       },
       include: {
         estado: true,
         regiao: true,
+        pontoDeMedicao: true,
       },
     });
 
@@ -66,6 +68,16 @@ export class PrismaSubUnidadeRepository
       created.codigoI100,
       created.codigoConv,
       created.cnpj,
+      created.pontoDeMedicaoId,
+      created.pontoDeMedicao
+        ? {
+            id: created.pontoDeMedicao.id,
+            codigo: created.pontoDeMedicao.codigo,
+            descricao: created.pontoDeMedicao.descricao,
+            createdAt: created.pontoDeMedicao.createdAt,
+            updatedAt: created.pontoDeMedicao.updatedAt,
+          }
+        : undefined,
       created.id,
       created.createdAt,
       created.updatedAt,
@@ -78,6 +90,7 @@ export class PrismaSubUnidadeRepository
       include: {
         estado: true,
         regiao: true,
+        pontoDeMedicao: true,
       },
     });
 
@@ -115,6 +128,16 @@ export class PrismaSubUnidadeRepository
       found.codigoI100,
       found.codigoConv,
       found.cnpj,
+      found.pontoDeMedicaoId,
+      found.pontoDeMedicao
+        ? {
+            id: found.pontoDeMedicao.id,
+            codigo: found.pontoDeMedicao.codigo,
+            descricao: found.pontoDeMedicao.descricao,
+            createdAt: found.pontoDeMedicao.createdAt,
+            updatedAt: found.pontoDeMedicao.updatedAt,
+          }
+        : undefined,
       found.id,
       found.createdAt,
       found.updatedAt,
@@ -126,6 +149,7 @@ export class PrismaSubUnidadeRepository
       include: {
         estado: true,
         regiao: true,
+        pontoDeMedicao: true,
       },
     });
 
@@ -162,6 +186,16 @@ export class PrismaSubUnidadeRepository
         subUnidade.codigoI100,
         subUnidade.codigoConv,
         subUnidade.cnpj,
+        subUnidade.pontoDeMedicaoId,
+        subUnidade.pontoDeMedicao
+          ? {
+              id: subUnidade.pontoDeMedicao.id,
+              codigo: subUnidade.pontoDeMedicao.codigo,
+              descricao: subUnidade.pontoDeMedicao.descricao,
+              createdAt: subUnidade.pontoDeMedicao.createdAt,
+              updatedAt: subUnidade.pontoDeMedicao.updatedAt,
+            }
+          : undefined,
         subUnidade.id,
         subUnidade.createdAt,
         subUnidade.updatedAt,
@@ -175,6 +209,7 @@ export class PrismaSubUnidadeRepository
       include: {
         estado: true,
         regiao: true,
+        pontoDeMedicao: true,
       },
     });
 
@@ -211,6 +246,16 @@ export class PrismaSubUnidadeRepository
         subUnidade.codigoI100,
         subUnidade.codigoConv,
         subUnidade.cnpj,
+        subUnidade.pontoDeMedicaoId,
+        subUnidade.pontoDeMedicao
+          ? {
+              id: subUnidade.pontoDeMedicao.id,
+              codigo: subUnidade.pontoDeMedicao.codigo,
+              descricao: subUnidade.pontoDeMedicao.descricao,
+              createdAt: subUnidade.pontoDeMedicao.createdAt,
+              updatedAt: subUnidade.pontoDeMedicao.updatedAt,
+            }
+          : undefined,
         subUnidade.id,
         subUnidade.createdAt,
         subUnidade.updatedAt,
@@ -236,11 +281,13 @@ export class PrismaSubUnidadeRepository
         codigoI100: subUnidade.codigoI100,
         codigoConv: subUnidade.codigoConv,
         cnpj: subUnidade.cnpj,
+        pontoDeMedicaoId: subUnidade.pontoDeMedicaoId,
         updatedAt: new Date(),
       },
       include: {
         estado: true,
         regiao: true,
+        pontoDeMedicao: true,
       },
     });
 
@@ -276,6 +323,16 @@ export class PrismaSubUnidadeRepository
       updated.codigoI100,
       updated.codigoConv,
       updated.cnpj,
+      updated.pontoDeMedicaoId,
+      updated.pontoDeMedicao
+        ? {
+            id: updated.pontoDeMedicao.id,
+            codigo: updated.pontoDeMedicao.codigo,
+            descricao: updated.pontoDeMedicao.descricao,
+            createdAt: updated.pontoDeMedicao.createdAt,
+            updatedAt: updated.pontoDeMedicao.updatedAt,
+          }
+        : undefined,
       updated.id,
       updated.createdAt,
       updated.updatedAt,

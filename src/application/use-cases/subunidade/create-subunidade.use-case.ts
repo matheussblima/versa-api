@@ -5,28 +5,17 @@ import {
   SUBUNIDADE_REPOSITORY,
 } from '../../../domain/repositories/subunidade.repository.interface';
 import { CreateSubUnidadeDto } from '../../dto/create-subunidade.dto';
-import {
-  CCEE_PONTO_MEDICAO_SERVICE,
-  ICceePontoMedicaoService,
-} from '../../../domain/services/ccee-ponto-medicao.service';
-import { PontoDeMedicao } from '../../../domain/entities/ponto-de-medicao.entity';
-import {
-  IPontoDeMedicaoRepository,
-  PONTO_DE_MEDICAO_REPOSITORY,
-} from '../../../domain/repositories/ponto-de-medicao.repository.interface';
+import { SubUnidadeResponseDto } from '../../dto/subunidade-response.dto';
+import { SubUnidadeMapper } from '../../mappers/subunidade.mapper';
 
 @Injectable()
 export class CreateSubUnidadeUseCase {
   constructor(
     @Inject(SUBUNIDADE_REPOSITORY)
     private readonly subUnidadeRepository: SubUnidadeRepositoryInterface,
-    @Inject(CCEE_PONTO_MEDICAO_SERVICE)
-    private readonly cceePontoMedicaoService: ICceePontoMedicaoService,
-    @Inject(PONTO_DE_MEDICAO_REPOSITORY)
-    private readonly pontoMedicaoRepository: IPontoDeMedicaoRepository,
   ) {}
 
-  async execute(dto: CreateSubUnidadeDto): Promise<SubUnidade> {
+  async execute(dto: CreateSubUnidadeDto): Promise<SubUnidadeResponseDto> {
     const subUnidade = SubUnidade.create(
       dto.nome,
       dto.unidadeId,
@@ -42,32 +31,12 @@ export class CreateSubUnidadeUseCase {
       dto.codigoI100,
       dto.codigoConv,
       dto.cnpj,
+      dto.pontoDeMedicaoId,
     );
 
     const createdSubUnidade =
       await this.subUnidadeRepository.create(subUnidade);
 
-    try {
-      const pontosMedicao =
-        await this.cceePontoMedicaoService.fetchPontosMedicaoBySubUnidadeId(
-          createdSubUnidade.id,
-        );
-
-      const pontosMedicaoResponse = pontosMedicao.map((pontoMedicao) =>
-        PontoDeMedicao.create(
-          pontoMedicao.codigo,
-          createdSubUnidade.id,
-          pontoMedicao.descricao,
-        ),
-      );
-
-      for (const pontoMedicao of pontosMedicaoResponse) {
-        await this.pontoMedicaoRepository.create(pontoMedicao);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar pontos de medição do CCEE:', error);
-    }
-
-    return createdSubUnidade;
+    return SubUnidadeMapper.toResponseDto(createdSubUnidade);
   }
 }

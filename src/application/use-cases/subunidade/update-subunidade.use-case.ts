@@ -1,10 +1,11 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { SubUnidade } from '../../../domain/entities/subunidade.entity';
 import {
   SubUnidadeRepositoryInterface,
   SUBUNIDADE_REPOSITORY,
 } from '../../../domain/repositories/subunidade.repository.interface';
 import { UpdateSubUnidadeDto } from '../../dto/update-subunidade.dto';
+import { SubUnidadeResponseDto } from '../../dto/subunidade-response.dto';
+import { SubUnidadeMapper } from '../../mappers/subunidade.mapper';
 
 @Injectable()
 export class UpdateSubUnidadeUseCase {
@@ -13,11 +14,15 @@ export class UpdateSubUnidadeUseCase {
     private readonly subUnidadeRepository: SubUnidadeRepositoryInterface,
   ) {}
 
-  async execute(id: string, dto: UpdateSubUnidadeDto): Promise<SubUnidade> {
+  async execute(
+    id: string,
+    dto: UpdateSubUnidadeDto,
+  ): Promise<SubUnidadeResponseDto> {
     const existingSubUnidade = await this.subUnidadeRepository.findById(id);
     if (!existingSubUnidade) {
       throw new NotFoundException(`Subunidade com ID ${id} não encontrada`);
     }
-    return await this.subUnidadeRepository.update(id, dto);
+    const updatedSubUnidade = await this.subUnidadeRepository.update(id, dto);
+    return SubUnidadeMapper.toResponseDto(updatedSubUnidade);
   }
 }
