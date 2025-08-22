@@ -13,7 +13,6 @@ export class PrismaUnidadeRepository implements IUnidadeRepository {
         id: unidade.id,
         nome: unidade.nome,
         codigoCCEE: unidade.codigoCCEE,
-        cnpj: unidade.cnpj,
         grupoEconomico: unidade.grupoEconomico,
         createdAt: unidade.createdAt,
         updatedAt: unidade.updatedAt,
@@ -23,7 +22,6 @@ export class PrismaUnidadeRepository implements IUnidadeRepository {
     return Unidade.create(
       created.nome,
       created.codigoCCEE,
-      created.cnpj,
       created.grupoEconomico,
       created.id,
       created.createdAt,
@@ -41,7 +39,6 @@ export class PrismaUnidadeRepository implements IUnidadeRepository {
     return Unidade.create(
       found.nome,
       found.codigoCCEE,
-      found.cnpj,
       found.grupoEconomico,
       found.id,
       found.createdAt,
@@ -56,7 +53,6 @@ export class PrismaUnidadeRepository implements IUnidadeRepository {
       Unidade.create(
         item.nome,
         item.codigoCCEE,
-        item.cnpj,
         item.grupoEconomico,
         item.id,
         item.createdAt,
@@ -71,7 +67,6 @@ export class PrismaUnidadeRepository implements IUnidadeRepository {
       data: {
         nome: unidade.nome,
         codigoCCEE: unidade.codigoCCEE,
-        cnpj: unidade.cnpj,
         grupoEconomico: unidade.grupoEconomico,
         updatedAt: new Date(),
       },
@@ -80,7 +75,6 @@ export class PrismaUnidadeRepository implements IUnidadeRepository {
     return Unidade.create(
       updated.nome,
       updated.codigoCCEE,
-      updated.cnpj,
       updated.grupoEconomico,
       updated.id,
       updated.createdAt,

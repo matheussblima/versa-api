@@ -19,14 +19,6 @@ export class CreateUnidadeDto {
   codigoCCEE: string;
 
   @ApiProperty({
-    description: 'CNPJ da unidade',
-    example: '12.345.678/0001-90',
-    type: String,
-  })
-  @IsString()
-  cnpj: string;
-
-  @ApiProperty({
     description: 'Grupo Econômico',
     example: 'Grupo A',
     type: String,

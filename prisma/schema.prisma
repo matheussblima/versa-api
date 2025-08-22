@@ -52,9 +52,10 @@ model SubUnidade {
   codigoI0          String?
   codigoI100        String?
   codigoConv        String?
+  cnpj              String?
   unidadeId String
   unidade   Unidades   @relation(fields: [unidadeId], references: [id], onDelete: Cascade)
-  pontosDeMedicao   PontoDeMedicao[]
+  pontoDeMedicao   PontoDeMedicao?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -65,7 +66,6 @@ model Unidades {
   id                String            @id @default(uuid())
   nome              String
   codigoCCEE        String            @unique
-  cnpj              String            @unique
   grupoEconomico    String
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
@@ -78,7 +78,7 @@ model PontoDeMedicao {
   id                String    @id @default(uuid())
   codigo            String    @unique
   descricao         String?
-  subUnidadeId      String
+  subUnidadeId      String    @unique
   subUnidade        SubUnidade @relation(fields: [subUnidadeId], references: [id], onDelete: Cascade)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt

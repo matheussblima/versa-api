@@ -17,6 +17,7 @@ export class SubUnidade {
     public readonly codigoI0?: string,
     public readonly codigoI100?: string,
     public readonly codigoConv?: string,
+    public readonly cnpj?: string,
     public readonly createdAt?: Date,
     public readonly updatedAt?: Date,
   ) {}
@@ -35,6 +36,7 @@ export class SubUnidade {
     codigoI0?: string,
     codigoI100?: string,
     codigoConv?: string,
+    cnpj?: string,
     id?: string,
     createdAt?: Date,
     updatedAt?: Date,
@@ -54,6 +56,7 @@ export class SubUnidade {
       codigoI0,
       codigoI100,
       codigoConv,
+      cnpj,
       createdAt || new Date(),
       updatedAt || new Date(),
     );

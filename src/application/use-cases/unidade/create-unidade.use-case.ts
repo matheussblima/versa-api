@@ -17,7 +17,6 @@ export class CreateUnidadeUseCase {
     const unidade = Unidade.create(
       dto.nome,
       dto.codigoCCEE,
-      dto.cnpj,
       dto.grupoEconomico,
     );
     return await this.unidadeRepository.create(unidade);

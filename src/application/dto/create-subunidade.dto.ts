@@ -101,6 +101,16 @@ export class CreateSubUnidadeDto {
   codigoConv?: string;
 
   @ApiProperty({
+    description: 'CNPJ da subunidade',
+    example: '12.345.678/0001-90',
+    required: false,
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  cnpj?: string;
+
+  @ApiProperty({
     description: 'ID da unidade pai',
     example: '123e4567-e89b-12d3-a456-426614174000',
     type: String,

@@ -65,16 +65,6 @@ export class UpdateUnidadeDto extends PartialType(CreateUnidadeDto) {
   codigoCCEE?: string;
 
   @ApiProperty({
-    description: 'CNPJ da unidade (opcional para atualização)',
-    example: '12.345.678/0001-91',
-    required: false,
-    type: String,
-  })
-  @IsOptional()
-  @IsString()
-  cnpj?: string;
-
-  @ApiProperty({
     description: 'APE Remoto (opcional para atualização)',
     example: true,
     required: false,

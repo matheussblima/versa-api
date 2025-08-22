@@ -41,6 +41,7 @@ export class CreateSubUnidadeUseCase {
       dto.codigoI0,
       dto.codigoI100,
       dto.codigoConv,
+      dto.cnpj,
     );
 
     const createdSubUnidade =
