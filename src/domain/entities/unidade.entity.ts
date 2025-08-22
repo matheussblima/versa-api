@@ -1,9 +1,12 @@
+import { SubUnidade } from './subunidade.entity';
+
 export class Unidade {
   constructor(
     public readonly id: string,
     public readonly nome: string,
     public readonly codigoCCEE: string,
     public readonly grupoEconomico: string,
+    public readonly subUnidades?: SubUnidade[],
     public readonly createdAt?: Date,
     public readonly updatedAt?: Date,
   ) {}
@@ -12,6 +15,7 @@ export class Unidade {
     nome: string,
     codigoCCEE: string,
     grupoEconomico: string,
+    subUnidades?: SubUnidade[],
     id?: string,
     createdAt?: Date,
     updatedAt?: Date,
@@ -21,6 +25,7 @@ export class Unidade {
       nome,
       codigoCCEE,
       grupoEconomico,
+      subUnidades,
       createdAt || new Date(),
       updatedAt || new Date(),
     );

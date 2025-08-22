@@ -1,9 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Unidade } from '../../../domain/entities/unidade.entity';
+
 import {
   IUnidadeRepository,
   UNIDADE_REPOSITORY,
 } from '../../../domain/repositories/unidade.repository.interface';
+import { UnidadeResponseDto } from '../../dto/unidade-response.dto';
+import { UnidadeMapper } from '../../mappers/unidade.mapper';
 
 @Injectable()
 export class FindAllUnidadesUseCase {
@@ -12,7 +14,8 @@ export class FindAllUnidadesUseCase {
     private readonly unidadeRepository: IUnidadeRepository,
   ) {}
 
-  async execute(): Promise<Unidade[]> {
-    return await this.unidadeRepository.findAll();
+  async execute(): Promise<UnidadeResponseDto[]> {
+    const unidades = await this.unidadeRepository.findAll();
+    return UnidadeMapper.toResponseDtoList(unidades);
   }
 }

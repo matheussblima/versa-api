@@ -5,6 +5,8 @@ import {
   UNIDADE_REPOSITORY,
 } from '../../../domain/repositories/unidade.repository.interface';
 import { CreateUnidadeDto } from '../../dto/create-unidade.dto';
+import { UnidadeResponseDto } from '../../dto/unidade-response.dto';
+import { UnidadeMapper } from '../../mappers/unidade.mapper';
 import {
   ICceePontoMedicaoService,
   CCEE_PONTO_MEDICAO_SERVICE,
@@ -21,7 +23,7 @@ export class CreateUnidadeUseCase {
     private readonly createPontoDeMedicaoUseCase: CreatePontoDeMedicaoUseCase,
   ) {}
 
-  async execute(dto: CreateUnidadeDto): Promise<Unidade> {
+  async execute(dto: CreateUnidadeDto): Promise<UnidadeResponseDto> {
     const unidade = Unidade.create(
       dto.nome,
       dto.codigoCCEE,
@@ -53,6 +55,6 @@ export class CreateUnidadeUseCase {
       throw error;
     }
 
-    return createdUnidade;
+    return UnidadeMapper.toResponseDto(createdUnidade);
   }
 }

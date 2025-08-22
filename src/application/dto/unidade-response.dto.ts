@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { SubUnidadeResponseDto } from './subunidade-response.dto';
 
 export class UnidadeResponseDto {
   @ApiProperty({
@@ -28,6 +29,13 @@ export class UnidadeResponseDto {
     type: String,
   })
   grupoEconomico: string;
+
+  @ApiProperty({
+    description: 'Subunidades relacionadas à unidade',
+    type: [SubUnidadeResponseDto],
+    required: false,
+  })
+  subUnidades?: SubUnidadeResponseDto[];
 
   @ApiProperty({
     description: 'Data de criação',
