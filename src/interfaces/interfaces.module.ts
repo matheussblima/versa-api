@@ -5,6 +5,7 @@ import { SubUnidadeController } from './controllers/subunidade.controller';
 import { PontoDeMedicaoController } from './controllers/ponto-de-medicao.controller';
 import { RegiaoController } from './controllers/regiao.controller';
 import { EstadoController } from './controllers/estado.controller';
+import { MedidaCincoMinutosController } from './controllers/medida-cinco-minutos.controller';
 
 @Module({
   imports: [ApplicationModule],
@@ -14,6 +15,7 @@ import { EstadoController } from './controllers/estado.controller';
     PontoDeMedicaoController,
     RegiaoController,
     EstadoController,
+    MedidaCincoMinutosController,
   ],
 })
 export class InterfacesModule {}

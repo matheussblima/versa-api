@@ -33,6 +33,9 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
   ) {}
 
   private buildSoapEnvelope(codigoPerfilAgente: string): string {
+    const username = process.env.CCEE_USERNAME || '';
+    const password = process.env.CCEE_PASSWORD || '';
+
     return `<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mh="http://xmlns.energia.org.br/MH/v2" xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:bm="http://xmlns.energia.org.br/BM/v2" xmlns:bo="http://xmlns.energia.org.br/BO/v2">
    <soapenv:Header>
@@ -41,8 +44,8 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
       </mh:messageHeader>
       <oas:Security>
          <oas:UsernameToken>
-            <oas:Username>19856455000131</oas:Username>
-            <oas:Password>Gestao@2</oas:Password>
+            <oas:Username>${username}</oas:Username>
+            <oas:Password>${password}</oas:Password>
          </oas:UsernameToken>
       </oas:Security>
       <mh:paginacao>
