@@ -23,6 +23,7 @@ import { CreatePontoDeMedicaoUseCase } from '../../application/use-cases/ponto-d
 import { FindAllPontosDeMedicaoUseCase } from '../../application/use-cases/ponto-de-medicao/find-all-pontos-de-medicao.use-case';
 import { FindPontoDeMedicaoByIdUseCase } from '../../application/use-cases/ponto-de-medicao/find-ponto-de-medicao-by-id.use-case';
 import { FindPontosDeMedicaoBySubUnidadeUseCase } from '../../application/use-cases/ponto-de-medicao/find-pontos-de-medicao-by-subunidade.use-case';
+import { FindPontosDeMedicaoByUnidadeUseCase } from '../../application/use-cases/ponto-de-medicao/find-pontos-de-medicao-by-unidade.use-case';
 import { SearchPontosDeMedicaoCceeUseCase } from '../../application/use-cases/ponto-de-medicao/search-pontos-de-medicao-ccee.use-case';
 import { UpdatePontoDeMedicaoUseCase } from '../../application/use-cases/ponto-de-medicao/update-ponto-de-medicao.use-case';
 import { DeletePontoDeMedicaoUseCase } from '../../application/use-cases/ponto-de-medicao/delete-ponto-de-medicao.use-case';
@@ -35,6 +36,7 @@ export class PontoDeMedicaoController {
     private readonly findAllPontosDeMedicaoUseCase: FindAllPontosDeMedicaoUseCase,
     private readonly findPontoDeMedicaoByIdUseCase: FindPontoDeMedicaoByIdUseCase,
     private readonly findPontosDeMedicaoBySubUnidadeUseCase: FindPontosDeMedicaoBySubUnidadeUseCase,
+    private readonly findPontosDeMedicaoByUnidadeUseCase: FindPontosDeMedicaoByUnidadeUseCase,
     private readonly searchPontosDeMedicaoCceeUseCase: SearchPontosDeMedicaoCceeUseCase,
     private readonly updatePontoDeMedicaoUseCase: UpdatePontoDeMedicaoUseCase,
     private readonly deletePontoDeMedicaoUseCase: DeletePontoDeMedicaoUseCase,
@@ -105,6 +107,26 @@ export class PontoDeMedicaoController {
   })
   findBySubUnidade(@Param('subUnidadeId') subUnidadeId: string) {
     return this.findPontosDeMedicaoBySubUnidadeUseCase.execute(subUnidadeId);
+  }
+
+  @Get('unidade/:unidadeId')
+  @ApiOperation({ summary: 'Buscar pontos de medição por unidade' })
+  @ApiParam({
+    name: 'unidadeId',
+    description: 'ID da unidade',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Pontos de medição da unidade retornados com sucesso',
+    type: [PontoDeMedicaoResponseDto],
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Unidade não encontrada',
+  })
+  findByUnidade(@Param('unidadeId') unidadeId: string) {
+    return this.findPontosDeMedicaoByUnidadeUseCase.execute(unidadeId);
   }
 
   @Get('ccee/:codigoCCEE')
