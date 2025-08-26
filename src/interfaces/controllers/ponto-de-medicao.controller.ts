@@ -24,6 +24,7 @@ import { FindAllPontosDeMedicaoUseCase } from '../../application/use-cases/ponto
 import { FindPontoDeMedicaoByIdUseCase } from '../../application/use-cases/ponto-de-medicao/find-ponto-de-medicao-by-id.use-case';
 import { FindPontosDeMedicaoBySubUnidadeUseCase } from '../../application/use-cases/ponto-de-medicao/find-pontos-de-medicao-by-subunidade.use-case';
 import { FindPontosDeMedicaoByUnidadeUseCase } from '../../application/use-cases/ponto-de-medicao/find-pontos-de-medicao-by-unidade.use-case';
+import { FindAvailablePontosDeMedicaoUseCase } from '../../application/use-cases/ponto-de-medicao/find-available-pontos-de-medicao.use-case';
 import { SearchPontosDeMedicaoCceeUseCase } from '../../application/use-cases/ponto-de-medicao/search-pontos-de-medicao-ccee.use-case';
 import { UpdatePontoDeMedicaoUseCase } from '../../application/use-cases/ponto-de-medicao/update-ponto-de-medicao.use-case';
 import { DeletePontoDeMedicaoUseCase } from '../../application/use-cases/ponto-de-medicao/delete-ponto-de-medicao.use-case';
@@ -37,6 +38,7 @@ export class PontoDeMedicaoController {
     private readonly findPontoDeMedicaoByIdUseCase: FindPontoDeMedicaoByIdUseCase,
     private readonly findPontosDeMedicaoBySubUnidadeUseCase: FindPontosDeMedicaoBySubUnidadeUseCase,
     private readonly findPontosDeMedicaoByUnidadeUseCase: FindPontosDeMedicaoByUnidadeUseCase,
+    private readonly findAvailablePontosDeMedicaoUseCase: FindAvailablePontosDeMedicaoUseCase,
     private readonly searchPontosDeMedicaoCceeUseCase: SearchPontosDeMedicaoCceeUseCase,
     private readonly updatePontoDeMedicaoUseCase: UpdatePontoDeMedicaoUseCase,
     private readonly deletePontoDeMedicaoUseCase: DeletePontoDeMedicaoUseCase,
@@ -67,6 +69,19 @@ export class PontoDeMedicaoController {
   })
   findAll() {
     return this.findAllPontosDeMedicaoUseCase.execute();
+  }
+
+  @Get('available')
+  @ApiOperation({
+    summary: 'Listar pontos de medição disponíveis (sem subunidade)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de pontos de medição disponíveis retornada com sucesso',
+    type: [PontoDeMedicaoResponseDto],
+  })
+  findAvailable() {
+    return this.findAvailablePontosDeMedicaoUseCase.execute();
   }
 
   @Get(':id')

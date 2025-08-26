@@ -45,14 +45,15 @@ export class CreateUnidadeUseCase {
           });
         } catch (error) {
           console.error(
-            `Erro ao criar ponto de medição ${pontoMedicao.codigo}:`,
-            error,
+            `Erro ao processar ponto de medição ${pontoMedicao.codigo}:`,
+            error.message || error,
           );
         }
       }
     } catch (error) {
-      console.error('Erro ao sincronizar pontos de medição do CCEE:', error);
-      throw error;
+      throw new Error(
+        'Erro ao sincronizar pontos de medição do CCEE: ' + error.message,
+      );
     }
 
     return UnidadeMapper.toResponseDto(createdUnidade);

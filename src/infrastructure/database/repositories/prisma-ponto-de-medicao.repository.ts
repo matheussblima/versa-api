@@ -45,8 +45,42 @@ export class PrismaPontoDeMedicaoRepository
     );
   }
 
+  async findByCodigo(codigo: string): Promise<PontoDeMedicao | null> {
+    const found = await this.prisma.pontoDeMedicao.findUnique({
+      where: { codigo },
+    });
+
+    if (!found) return null;
+
+    return PontoDeMedicao.create(
+      found.codigo,
+      found.descricao,
+      found.id,
+      found.createdAt,
+      found.updatedAt,
+    );
+  }
+
   async findAll(): Promise<PontoDeMedicao[]> {
     const found = await this.prisma.pontoDeMedicao.findMany();
+
+    return found.map((item) =>
+      PontoDeMedicao.create(
+        item.codigo,
+        item.descricao,
+        item.id,
+        item.createdAt,
+        item.updatedAt,
+      ),
+    );
+  }
+
+  async findAvailable(): Promise<PontoDeMedicao[]> {
+    const found = await this.prisma.pontoDeMedicao.findMany({
+      where: {
+        subUnidade: null,
+      },
+    });
 
     return found.map((item) =>
       PontoDeMedicao.create(
@@ -78,6 +112,31 @@ export class PrismaPontoDeMedicaoRepository
       updated.id,
       updated.createdAt,
       updated.updatedAt,
+    );
+  }
+
+  async upsert(
+    codigo: string,
+    pontoDeMedicao: Partial<PontoDeMedicao>,
+  ): Promise<PontoDeMedicao> {
+    const upserted = await this.prisma.pontoDeMedicao.upsert({
+      where: { codigo },
+      update: {
+        descricao: pontoDeMedicao.descricao,
+        updatedAt: new Date(),
+      },
+      create: {
+        codigo: codigo,
+        descricao: pontoDeMedicao.descricao,
+      },
+    });
+
+    return PontoDeMedicao.create(
+      upserted.codigo,
+      upserted.descricao,
+      upserted.id,
+      upserted.createdAt,
+      upserted.updatedAt,
     );
   }
 

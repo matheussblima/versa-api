@@ -3,25 +3,18 @@ import {
   IPontoDeMedicaoRepository,
   PONTO_DE_MEDICAO_REPOSITORY,
 } from '../../../domain/repositories/ponto-de-medicao.repository.interface';
-import { CreatePontoDeMedicaoDto } from '../../dto/create-ponto-de-medicao.dto';
 import { PontoDeMedicaoResponseDto } from '../../dto/ponto-de-medicao-response.dto';
 import { PontoDeMedicaoMapper } from '../../mappers/ponto-de-medicao.mapper';
 
 @Injectable()
-export class CreatePontoDeMedicaoUseCase {
+export class FindAvailablePontosDeMedicaoUseCase {
   constructor(
     @Inject(PONTO_DE_MEDICAO_REPOSITORY)
     private readonly pontoDeMedicaoRepository: IPontoDeMedicaoRepository,
   ) {}
 
-  async execute(
-    dto: CreatePontoDeMedicaoDto,
-  ): Promise<PontoDeMedicaoResponseDto> {
-    const pontoDeMedicao = await this.pontoDeMedicaoRepository.upsert(
-      dto.codigo,
-      { codigo: dto.codigo, descricao: dto.descricao },
-    );
-
-    return PontoDeMedicaoMapper.toResponseDto(pontoDeMedicao);
+  async execute(): Promise<PontoDeMedicaoResponseDto[]> {
+    const pontosDeMedicao = await this.pontoDeMedicaoRepository.findAvailable();
+    return PontoDeMedicaoMapper.toResponseDtoList(pontosDeMedicao);
   }
 }
