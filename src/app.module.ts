@@ -6,6 +6,7 @@ import { DatabaseModule } from './infrastructure/database/database.module';
 import { HttpModule } from './infrastructure/http/http.module';
 import { ApplicationModule } from './application/application.module';
 import { InterfacesModule } from './interfaces/interfaces.module';
+import { QueueModule } from './infrastructure/queue/queue.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { InterfacesModule } from './interfaces/interfaces.module';
     HttpModule,
     ApplicationModule,
     InterfacesModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],
