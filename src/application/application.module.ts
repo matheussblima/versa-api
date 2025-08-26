@@ -31,6 +31,7 @@ import { FindEstadosByRegiaoUseCase } from './use-cases/estado/find-estados-by-r
 import { UpdateEstadoUseCase } from './use-cases/estado/update-estado.use-case';
 import { DeleteEstadoUseCase } from './use-cases/estado/delete-estado.use-case';
 import { SearchMedidasCincoMinutosCceeUseCase } from './use-cases/medida-cinco-minutos/search-medidas-cinco-minutos-ccee.use-case';
+import { SearchMedidasQuinzeMinutosCceeUseCase } from './use-cases/medida-quinze-minutos/search-medidas-quinze-minutos-ccee.use-case';
 
 @Module({
   imports: [DatabaseModule, HttpModule],
@@ -65,6 +66,7 @@ import { SearchMedidasCincoMinutosCceeUseCase } from './use-cases/medida-cinco-m
     UpdateEstadoUseCase,
     DeleteEstadoUseCase,
     SearchMedidasCincoMinutosCceeUseCase,
+    SearchMedidasQuinzeMinutosCceeUseCase,
   ],
   exports: [
     CreateUnidadeUseCase,
@@ -97,6 +99,7 @@ import { SearchMedidasCincoMinutosCceeUseCase } from './use-cases/medida-cinco-m
     UpdateEstadoUseCase,
     DeleteEstadoUseCase,
     SearchMedidasCincoMinutosCceeUseCase,
+    SearchMedidasQuinzeMinutosCceeUseCase,
   ],
 })
 export class ApplicationModule {}
