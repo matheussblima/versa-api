@@ -14,7 +14,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ScheduleMedidasDto {
   @ApiProperty({
-    description: 'Reference date for search (YYYY-MM-DD format)',
+    description:
+      'Reference date for search (YYYY-MM-DD or ISO dateTime format)',
     example: '2024-01-15',
   })
   @IsString()
@@ -47,13 +48,13 @@ export class QueueController {
 
   @Post('schedule-medidas')
   @ApiOperation({
-    summary: 'Agendar busca de medições para uma data específica',
+    summary: 'Agendar busca de medições de 15 minutos para uma data específica',
     description:
-      'Permite agendar manualmente a busca de medições para uma data específica',
+      'Permite agendar manualmente a busca de medições de 15 minutos para uma data específica',
   })
   @ApiBody({
     type: ScheduleMedidasDto,
-    description: 'Dados para agendar a busca de medições',
+    description: 'Dados para agendar a busca de medições de 15 minutos',
   })
   @ApiResponse({
     status: 201,

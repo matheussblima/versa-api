@@ -3,14 +3,14 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { Inject } from '@nestjs/common';
 import {
-  ICceeMedidaCincoMinutosService,
-  CCEE_MEDIDA_CINCO_MINUTOS_SERVICE,
-} from '../../../domain/services/ccee-medida-cinco-minutos.service';
+  ICceeMedidaQuinzeMinutosService,
+  CCEE_MEDIDA_QUINZE_MINUTOS_SERVICE,
+} from '../../../domain/services/ccee-medida-quinze-minutos.service';
 import {
   IPontoDeMedicaoRepository,
   PONTO_DE_MEDICAO_REPOSITORY,
 } from '../../../domain/repositories/ponto-de-medicao.repository.interface';
-import { MedidaCincoMinutos } from '../../../domain/entities/medida-cinco-minutos.entity';
+import { MedidaQuinzeMinutos } from '../../../domain/entities/medida-quinze-minutos.entity';
 
 export interface MedidasDailyJobData {
   referenceDate: string;
@@ -22,8 +22,8 @@ export class MedidasDailyProcessor {
   private readonly logger = new Logger(MedidasDailyProcessor.name);
 
   constructor(
-    @Inject(CCEE_MEDIDA_CINCO_MINUTOS_SERVICE)
-    private readonly cceeMedidaCincoMinutosService: ICceeMedidaCincoMinutosService,
+    @Inject(CCEE_MEDIDA_QUINZE_MINUTOS_SERVICE)
+    private readonly cceeMedidaQuinzeMinutosService: ICceeMedidaQuinzeMinutosService,
     @Inject(PONTO_DE_MEDICAO_REPOSITORY)
     private readonly pontoDeMedicaoRepository: IPontoDeMedicaoRepository,
   ) {}
@@ -33,7 +33,7 @@ export class MedidasDailyProcessor {
     const { referenceDate, measurementPointCode } = job.data;
 
     this.logger.log(
-      `Iniciando busca de medições para ${referenceDate}${
+      `Iniciando busca de medições de 15 minutos para ${referenceDate}${
         measurementPointCode ? ` - Ponto: ${measurementPointCode}` : ''
       }`,
     );
@@ -46,11 +46,11 @@ export class MedidasDailyProcessor {
       }
 
       this.logger.log(
-        `Busca de medições concluída com sucesso para ${referenceDate}`,
+        `Busca de medições de 15 minutos concluída com sucesso para ${referenceDate}`,
       );
     } catch (error) {
       this.logger.error(
-        `Erro ao buscar medições para ${referenceDate}: ${error.message}`,
+        `Erro ao buscar medições de 15 minutos para ${referenceDate}: ${error.message}`,
         error.stack,
       );
       throw error;
@@ -61,7 +61,7 @@ export class MedidasDailyProcessor {
     const pontosDeMedicao = await this.pontoDeMedicaoRepository.findAll();
 
     this.logger.log(
-      `Buscando medições para ${pontosDeMedicao.length} pontos de medição`,
+      `Buscando medições de 15 minutos para ${pontosDeMedicao.length} pontos de medição`,
     );
 
     const promises = pontosDeMedicao.map((ponto) =>
@@ -76,17 +76,17 @@ export class MedidasDailyProcessor {
     measurementPointCode: string,
   ) {
     this.logger.log(
-      `Buscando medições para ponto ${measurementPointCode} em ${referenceDate}`,
+      `Buscando medições de 15 minutos para ponto ${measurementPointCode} em ${referenceDate}`,
     );
 
     let numero = 1;
     let hasMoreData = true;
-    const todasMedidas: MedidaCincoMinutos[] = [];
+    const todasMedidas: MedidaQuinzeMinutos[] = [];
 
     while (hasMoreData) {
       try {
         const medidas =
-          await this.cceeMedidaCincoMinutosService.fetchMedidasCincoMinutos({
+          await this.cceeMedidaQuinzeMinutosService.fetchMedidasQuinzeMinutos({
             codigoPontoMedicao: measurementPointCode,
             dataReferencia: referenceDate,
             numero,
@@ -112,7 +112,7 @@ export class MedidasDailyProcessor {
     }
 
     this.logger.log(
-      `Total de ${todasMedidas.length} medições encontradas para ${measurementPointCode}`,
+      `Total de ${todasMedidas.length} medições de 15 minutos encontradas para ${measurementPointCode}`,
     );
 
     // Aqui você pode adicionar lógica para salvar as medições no banco de dados

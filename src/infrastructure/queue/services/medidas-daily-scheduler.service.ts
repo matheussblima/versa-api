@@ -25,10 +25,10 @@ export class MedidasDailySchedulerService {
     const ontem = new Date();
     ontem.setDate(ontem.getDate() - 1);
 
-    const referenceDate = ontem.toISOString().split('T')[0];
+    const referenceDate = ontem.toISOString();
 
     this.logger.log(
-      `Agendando busca de medições para o dia anterior: ${referenceDate}`,
+      `Agendando busca de medições de 15 minutos para o dia anterior: ${referenceDate}`,
     );
 
     try {
@@ -49,7 +49,7 @@ export class MedidasDailySchedulerService {
       );
 
       this.logger.log(
-        `Tarefa agendada com sucesso para buscar medições de ${referenceDate}`,
+        `Tarefa agendada com sucesso para buscar medições de 15 minutos de ${referenceDate}`,
       );
     } catch (error) {
       this.logger.error(
@@ -58,12 +58,22 @@ export class MedidasDailySchedulerService {
     }
   }
 
+  private formatDateForCcee(dateString: string): string {
+    if (dateString.includes('T')) {
+      return dateString;
+    }
+
+    const date = new Date(dateString);
+    return date.toISOString();
+  }
+
   async scheduleFetchMeasuresForDate(
     referenceDate: string,
     measurementPointCode?: string,
   ) {
+    const formattedDate = this.formatDateForCcee(referenceDate);
     this.logger.log(
-      `Agendando busca manual de medições para ${referenceDate}${
+      `Agendando busca manual de medições de 15 minutos para ${formattedDate}${
         measurementPointCode ? ` - Ponto: ${measurementPointCode}` : ''
       }`,
     );
@@ -72,7 +82,7 @@ export class MedidasDailySchedulerService {
       await this.medidasDailyQueue.add(
         'fetch-measures-previous-day',
         {
-          referenceDate,
+          referenceDate: formattedDate,
           measurementPointCode,
         },
         {
