@@ -5,11 +5,13 @@ import { PrismaPontoDeMedicaoRepository } from './repositories/prisma-ponto-de-m
 import { PrismaSubUnidadeRepository } from './repositories/prisma-subunidade.repository';
 import { PrismaRegiaoRepository } from './repositories/prisma-regiao.repository';
 import { PrismaEstadoRepository } from './repositories/prisma-estado.repository';
+import { MedidaQuinzeMinutosRepository } from './repositories/medida-quinze-minutos.repository';
 import { UNIDADE_REPOSITORY } from '../../domain/repositories/unidade.repository.interface';
 import { PONTO_DE_MEDICAO_REPOSITORY } from '../../domain/repositories/ponto-de-medicao.repository.interface';
 import { SUBUNIDADE_REPOSITORY } from '../../domain/repositories/subunidade.repository.interface';
 import { REGIAO_REPOSITORY } from '../../domain/repositories/regiao.repository.interface';
 import { ESTADO_REPOSITORY } from '../../domain/repositories/estado.repository.interface';
+import { MEDIDA_QUINZE_MINUTOS_REPOSITORY } from '../../domain/repositories/medida-quinze-minutos.repository.interface';
 
 @Module({
   providers: [
@@ -34,6 +36,10 @@ import { ESTADO_REPOSITORY } from '../../domain/repositories/estado.repository.i
       provide: ESTADO_REPOSITORY,
       useClass: PrismaEstadoRepository,
     },
+    {
+      provide: MEDIDA_QUINZE_MINUTOS_REPOSITORY,
+      useClass: MedidaQuinzeMinutosRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -42,6 +48,7 @@ import { ESTADO_REPOSITORY } from '../../domain/repositories/estado.repository.i
     SUBUNIDADE_REPOSITORY,
     REGIAO_REPOSITORY,
     ESTADO_REPOSITORY,
+    MEDIDA_QUINZE_MINUTOS_REPOSITORY,
   ],
 })
 export class DatabaseModule {}

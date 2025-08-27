@@ -10,26 +10,32 @@ import {
   IPontoDeMedicaoRepository,
   PONTO_DE_MEDICAO_REPOSITORY,
 } from '../../../domain/repositories/ponto-de-medicao.repository.interface';
+import {
+  IMedidaQuinzeMinutosRepository,
+  MEDIDA_QUINZE_MINUTOS_REPOSITORY,
+} from '../../../domain/repositories/medida-quinze-minutos.repository.interface';
 import { MedidaQuinzeMinutos } from '../../../domain/entities/medida-quinze-minutos.entity';
 
-export interface MedidasDailyJobData {
+export interface MeasuresDailyJobData {
   referenceDate: string;
   measurementPointCode?: string;
 }
 
 @Processor('measures-daily')
-export class MedidasDailyProcessor {
-  private readonly logger = new Logger(MedidasDailyProcessor.name);
+export class MeasuresDailyProcessor {
+  private readonly logger = new Logger(MeasuresDailyProcessor.name);
 
   constructor(
     @Inject(CCEE_MEDIDA_QUINZE_MINUTOS_SERVICE)
     private readonly cceeMedidaQuinzeMinutosService: ICceeMedidaQuinzeMinutosService,
     @Inject(PONTO_DE_MEDICAO_REPOSITORY)
     private readonly pontoDeMedicaoRepository: IPontoDeMedicaoRepository,
+    @Inject(MEDIDA_QUINZE_MINUTOS_REPOSITORY)
+    private readonly medidaQuinzeMinutosRepository: IMedidaQuinzeMinutosRepository,
   ) {}
 
   @Process('fetch-measures-previous-day')
-  async handleFetchMeasuresPreviousDay(job: Job<MedidasDailyJobData>) {
+  async handleFetchMeasuresPreviousDay(job: Job<MeasuresDailyJobData>) {
     const { referenceDate, measurementPointCode } = job.data;
 
     this.logger.log(
@@ -58,14 +64,14 @@ export class MedidasDailyProcessor {
   }
 
   private async fetchMeasuresForAllPoints(referenceDate: string) {
-    const pontosDeMedicao = await this.pontoDeMedicaoRepository.findAll();
+    const measurementPoints = await this.pontoDeMedicaoRepository.findAll();
 
     this.logger.log(
-      `Buscando medições de 15 minutos para ${pontosDeMedicao.length} pontos de medição`,
+      `Buscando medições de 15 minutos para ${measurementPoints.length} pontos de medição`,
     );
 
-    const promises = pontosDeMedicao.map((ponto) =>
-      this.fetchMeasuresForPoint(referenceDate, ponto.codigo),
+    const promises = measurementPoints.map((point) =>
+      this.fetchMeasuresForPoint(referenceDate, point.codigo),
     );
 
     await Promise.allSettled(promises);
@@ -79,43 +85,103 @@ export class MedidasDailyProcessor {
       `Buscando medições de 15 minutos para ponto ${measurementPointCode} em ${referenceDate}`,
     );
 
-    let numero = 1;
+    let pageNumber = 1;
     let hasMoreData = true;
-    const todasMedidas: MedidaQuinzeMinutos[] = [];
+    const allMeasures: MedidaQuinzeMinutos[] = [];
 
     while (hasMoreData) {
       try {
-        const medidas =
+        const measures =
           await this.cceeMedidaQuinzeMinutosService.fetchMedidasQuinzeMinutos({
             codigoPontoMedicao: measurementPointCode,
             dataReferencia: referenceDate,
-            numero,
+            numero: pageNumber,
             quantidadeItens: 500,
           });
 
-        if (medidas.length === 0) {
+        if (measures.length === 0) {
           hasMoreData = false;
         } else {
-          todasMedidas.push(...medidas);
-          numero++;
+          allMeasures.push(...measures);
+          pageNumber++;
 
-          if (medidas.length < 500) {
+          if (measures.length < 500) {
             hasMoreData = false;
           }
         }
       } catch (error) {
         this.logger.error(
-          `Erro ao buscar página ${numero} para ${measurementPointCode}: ${error.message}`,
+          `Erro ao buscar página ${pageNumber} para ${measurementPointCode}: ${error.message}`,
         );
         throw error;
       }
     }
 
     this.logger.log(
-      `Total de ${todasMedidas.length} medições de 15 minutos encontradas para ${measurementPointCode}`,
+      `Total de ${allMeasures.length} medições de 15 minutos encontradas para ${measurementPointCode}`,
     );
 
-    // Aqui você pode adicionar lógica para salvar as medições no banco de dados
-    // await this.salvarMedidasNoBanco(todasMedidas);
+    await this.saveMeasuresToDatabase(allMeasures, measurementPointCode);
+  }
+
+  private async saveMeasuresToDatabase(
+    measures: MedidaQuinzeMinutos[],
+    measurementPointCode: string,
+  ) {
+    if (measures.length === 0) {
+      this.logger.log(
+        `Nenhuma medida para salvar para o ponto ${measurementPointCode}`,
+      );
+      return;
+    }
+
+    try {
+      const referenceDate = new Date(measures[0].dataHora);
+      const startDate = new Date(referenceDate);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(referenceDate);
+      endDate.setHours(23, 59, 59, 999);
+
+      const existingMeasures =
+        await this.medidaQuinzeMinutosRepository.findByPontoMedicaoAndDateRange(
+          measurementPointCode,
+          startDate,
+          endDate,
+        );
+
+      if (existingMeasures.length > 0) {
+        this.logger.log(
+          `Já existem ${existingMeasures.length} medidas para o ponto ${measurementPointCode} na data ${referenceDate.toISOString().split('T')[0]}. Pulando...`,
+        );
+        return;
+      }
+
+      const uniqueMeasures = new Map<string, MedidaQuinzeMinutos>();
+      for (const measure of measures) {
+        const key = `${measure.codigoPontoMedicao}_${measure.dataHora.toISOString()}`;
+        if (!uniqueMeasures.has(key)) {
+          uniqueMeasures.set(key, measure);
+        }
+      }
+
+      const measuresToSave = Array.from(uniqueMeasures.values());
+
+      this.logger.log(
+        `Salvando ${measuresToSave.length} medições únicas no banco de dados para o ponto ${measurementPointCode}`,
+      );
+
+      const savedMeasures =
+        await this.medidaQuinzeMinutosRepository.saveMany(measuresToSave);
+
+      this.logger.log(
+        `${savedMeasures.length} medições salvas com sucesso para o ponto ${measurementPointCode}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Erro ao salvar medições para o ponto ${measurementPointCode}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 }

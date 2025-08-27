@@ -106,10 +106,13 @@ export class CceePontoMedicaoService implements ICceePontoMedicaoService {
   private convertCceeToPontoMedicao(
     cceePonto: CceePontoMedicao,
   ): PontoDeMedicao {
-    return PontoDeMedicao.create(
-      cceePonto['bov2:codigo'],
-      cceePonto['bov2:nome'],
-    );
+    const codigo = cceePonto['bov2:codigo'];
+
+    const codigoPontoMedicao = codigo.endsWith('P')
+      ? codigo.slice(0, -1)
+      : codigo;
+
+    return PontoDeMedicao.create(codigoPontoMedicao, cceePonto['bov2:nome']);
   }
 
   async fetchPontosMedicaoByCodeCcee(

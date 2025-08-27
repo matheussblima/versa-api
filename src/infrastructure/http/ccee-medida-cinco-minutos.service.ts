@@ -94,6 +94,9 @@ export class CceeMedidaCincoMinutosService
     cceeMedida: CceeMedidaCincoMinutos,
   ): MedidaCincoMinutos {
     const codigoMedidor = cceeMedida['bov2:medidor']?.['bov2:codigo'] || '';
+    const codigoPontoMedicao = codigoMedidor.endsWith('P')
+      ? codigoMedidor.slice(0, -1)
+      : codigoMedidor;
 
     const data = cceeMedida['bov2:data'] || '';
 
@@ -107,7 +110,7 @@ export class CceeMedidaCincoMinutosService
       ] || '';
 
     return MedidaCincoMinutos.create(
-      codigoMedidor,
+      codigoPontoMedicao,
       new Date(data),
       valor,
       unidade,

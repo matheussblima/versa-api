@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HttpModule } from '../http/http.module';
 import { DatabaseModule } from '../database/database.module';
-import { MedidasDailyProcessor } from './processors/medidas-daily.processor';
+import { MeasuresDailyProcessor } from './processors/medidas-daily.processor';
 import { MedidasDailySchedulerService } from './services/medidas-daily-scheduler.service';
 
 @Module({
@@ -37,7 +37,7 @@ import { MedidasDailySchedulerService } from './services/medidas-daily-scheduler
     HttpModule,
     DatabaseModule,
   ],
-  providers: [MedidasDailyProcessor, MedidasDailySchedulerService],
+  providers: [MeasuresDailyProcessor, MedidasDailySchedulerService],
   exports: [BullModule, MedidasDailySchedulerService],
 })
 export class QueueModule {}

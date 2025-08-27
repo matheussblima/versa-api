@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,74 +8,91 @@ datasource db {
 }
 
 model Regiao {
-  id        String     @id @default(uuid())
-  sigla     String     @unique
-  nome      String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  estados   Estado[]
+  id          String       @id @default(uuid())
+  sigla       String       @unique
+  nome        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  estados     Estado[]
   subUnidades SubUnidade[]
 
   @@map("regioes")
 }
 
 model Estado {
-  id        String     @id @default(uuid())
-  sigla     String     @unique
-  nome      String
-  regiaoId  String
-  regiao    Regiao     @relation(fields: [regiaoId], references: [id], onDelete: Cascade)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id          String       @id @default(uuid())
+  sigla       String       @unique
+  nome        String
+  regiaoId    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  regiao      Regiao       @relation(fields: [regiaoId], references: [id], onDelete: Cascade)
   subUnidades SubUnidade[]
 
   @@map("estados")
 }
 
 model SubUnidade {
-  id                String            @id @default(uuid())
-  nome              String
-  descricao         String?
-  estadoId          String?
-  estado            Estado?           @relation(fields: [estadoId], references: [id])
-  regiaoId          String?
-  regiao            Regiao?           @relation(fields: [regiaoId], references: [id])
-  apeRemoto         Boolean?
-  apeLocal          Boolean?
-  codigoI5          String?
-  codigoI0          String?
-  codigoI100        String?
-  codigoConv        String?
-  cnpj              String?
-  unidadeId String
-  unidade   Unidades   @relation(fields: [unidadeId], references: [id], onDelete: Cascade)
-  pontoDeMedicaoId  String?           @unique
-  pontoDeMedicao    PontoDeMedicao?   @relation(fields: [pontoDeMedicaoId], references: [id])
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id               String          @id @default(uuid())
+  nome             String
+  descricao        String?
+  estadoId         String?
+  regiaoId         String?
+  apeRemoto        Boolean?
+  apeLocal         Boolean?
+  codigoI5         String?
+  codigoI0         String?
+  codigoI100       String?
+  codigoConv       String?
+  unidadeId        String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  cnpj             String?
+  pontoDeMedicaoId String?         @unique
+  estado           Estado?         @relation(fields: [estadoId], references: [id])
+  pontoDeMedicao   PontoDeMedicao? @relation(fields: [pontoDeMedicaoId], references: [id])
+  regiao           Regiao?         @relation(fields: [regiaoId], references: [id])
+  unidade          Unidades        @relation(fields: [unidadeId], references: [id], onDelete: Cascade)
 
   @@map("sub_unidades")
 }
 
 model Unidades {
-  id                String            @id @default(uuid())
-  nome              String
-  codigoCCEE        String            @unique
-  grupoEconomico    String
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  subUnidades       SubUnidade[]
+  id             String       @id @default(uuid())
+  nome           String
+  codigoCCEE     String       @unique
+  grupoEconomico String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  subUnidades    SubUnidade[]
 
   @@map("unidades")
 }
 
 model PontoDeMedicao {
-  id                String    @id @default(uuid())
-  codigo            String    @unique
-  descricao         String?
-  subUnidade        SubUnidade?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id                   String                @id @default(uuid())
+  descricao            String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  codigo               String                @unique
+  medidasQuinzeMinutos MedidaQuinzeMinutos[]
+  subUnidade           SubUnidade?
 
   @@map("pontos_de_medicao")
+}
+
+model MedidaQuinzeMinutos {
+  id                 String         @id @default(uuid())
+  codigoPontoMedicao String
+  dataHora           DateTime
+  valor              Float
+  unidade            String?
+  pontoDeMedicaoId   String
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  pontoDeMedicao     PontoDeMedicao @relation(fields: [pontoDeMedicaoId], references: [id], onDelete: Cascade)
+
+  @@unique([codigoPontoMedicao, dataHora])
+  @@index([pontoDeMedicaoId, dataHora])
+  @@map("medidas_quinze_minutos")
 }
