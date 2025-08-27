@@ -174,8 +174,15 @@ export class MedidaQuinzeMinutosRepository
     return count > 0;
   }
 
-  async findAll(): Promise<MedidaQuinzeMinutos[]> {
+  async findAll(codigoPontoMedicao?: string): Promise<MedidaQuinzeMinutos[]> {
+    const where: any = {};
+
+    if (codigoPontoMedicao) {
+      where.codigoPontoMedicao = codigoPontoMedicao;
+    }
+
     const medidas = await this.prisma.medidaQuinzeMinutos.findMany({
+      where,
       orderBy: {
         dataHora: 'desc',
       },

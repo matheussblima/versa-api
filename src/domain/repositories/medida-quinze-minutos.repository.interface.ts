@@ -6,7 +6,7 @@ export const MEDIDA_QUINZE_MINUTOS_REPOSITORY =
 export interface IMedidaQuinzeMinutosRepository {
   save(medida: MedidaQuinzeMinutos): Promise<MedidaQuinzeMinutos>;
   saveMany(medidas: MedidaQuinzeMinutos[]): Promise<MedidaQuinzeMinutos[]>;
-  findAll(): Promise<MedidaQuinzeMinutos[]>;
+  findAll(codigoPontoMedicao?: string): Promise<MedidaQuinzeMinutos[]>;
   findById(id: string): Promise<MedidaQuinzeMinutos | null>;
   findByPontoMedicaoAndDateRange(
     codigoPontoMedicao: string,

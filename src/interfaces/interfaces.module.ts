@@ -7,8 +7,8 @@ import { PontoDeMedicaoController } from './controllers/ponto-de-medicao.control
 import { RegiaoController } from './controllers/regiao.controller';
 import { EstadoController } from './controllers/estado.controller';
 import { MedidaCincoMinutosController } from './controllers/medida-cinco-minutos.controller';
-import { MedidaQuinzeMinutosController } from './controllers/medida-quinze-minutos.controller';
-import { MedidaQuinzeMinutosCrudController } from './controllers/medida-quinze-minutos-crud.controller';
+import { MedidaQuinzeMinutosController } from './controllers/medida-quinze-minutos-ccee.controller';
+import { MedidaQuinzeMinutosCrudController } from './controllers/medida-quinze-minutos.controller';
 import { QueueController } from './controllers/queue.controller';
 
 @Module({

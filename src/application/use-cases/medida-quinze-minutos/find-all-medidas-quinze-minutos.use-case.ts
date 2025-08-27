@@ -13,9 +13,12 @@ export class FindAllMedidasQuinzeMinutosUseCase {
     private readonly medidaQuinzeMinutosRepository: IMedidaQuinzeMinutosRepository,
   ) {}
 
-  async execute(): Promise<MedidaQuinzeMinutosResponseDto[]> {
+  async execute(
+    codigoPontoMedicao?: string,
+  ): Promise<MedidaQuinzeMinutosResponseDto[]> {
     try {
-      const medidas = await this.medidaQuinzeMinutosRepository.findAll();
+      const medidas =
+        await this.medidaQuinzeMinutosRepository.findAll(codigoPontoMedicao);
       return MedidaQuinzeMinutosMapper.toResponseDtoList(medidas);
     } catch (error) {
       throw new Error(
