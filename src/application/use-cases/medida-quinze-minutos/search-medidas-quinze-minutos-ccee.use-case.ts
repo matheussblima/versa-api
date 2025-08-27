@@ -4,7 +4,7 @@ import {
   CCEE_MEDIDA_QUINZE_MINUTOS_SERVICE,
 } from '../../../domain/services/ccee-medida-quinze-minutos.service';
 import { MedidaQuinzeMinutosCceeResponseDto } from '../../dto/medida-quinze-minutos-ccee-response.dto';
-import { MedidaCincoMinutosParamsDto } from '../../dto/medida-cinco-minutos-params.dto';
+import { MedidaQuinzeMinutosParamsDto } from '../../dto/medida-quinze-minutos-params.dto';
 import { MedidaQuinzeMinutosCceeMapper } from '../../mappers/medida-quinze-minutos-ccee.mapper';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class SearchMedidasQuinzeMinutosCceeUseCase {
   ) {}
 
   async execute(
-    params: MedidaCincoMinutosParamsDto,
+    params: MedidaQuinzeMinutosParamsDto,
   ): Promise<MedidaQuinzeMinutosCceeResponseDto[]> {
     try {
       const medidas =

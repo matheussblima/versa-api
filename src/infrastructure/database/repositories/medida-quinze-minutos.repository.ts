@@ -174,6 +174,92 @@ export class MedidaQuinzeMinutosRepository
     return count > 0;
   }
 
+  async findAll(): Promise<MedidaQuinzeMinutos[]> {
+    const medidas = await this.prisma.medidaQuinzeMinutos.findMany({
+      orderBy: {
+        dataHora: 'desc',
+      },
+    });
+
+    return medidas.map((medida) =>
+      MedidaQuinzeMinutos.create(
+        medida.codigoPontoMedicao,
+        medida.dataHora,
+        medida.valor,
+        medida.unidade,
+        medida.id,
+        medida.createdAt,
+        medida.updatedAt,
+      ),
+    );
+  }
+
+  async findById(id: string): Promise<MedidaQuinzeMinutos | null> {
+    const medida = await this.prisma.medidaQuinzeMinutos.findUnique({
+      where: { id },
+    });
+
+    if (!medida) {
+      return null;
+    }
+
+    return MedidaQuinzeMinutos.create(
+      medida.codigoPontoMedicao,
+      medida.dataHora,
+      medida.valor,
+      medida.unidade,
+      medida.id,
+      medida.createdAt,
+      medida.updatedAt,
+    );
+  }
+
+  async update(
+    id: string,
+    medidaData: Partial<MedidaQuinzeMinutos>,
+  ): Promise<MedidaQuinzeMinutos> {
+    const updateData: any = {};
+
+    if (medidaData.codigoPontoMedicao !== undefined) {
+      updateData.codigoPontoMedicao = medidaData.codigoPontoMedicao;
+    }
+
+    if (medidaData.dataHora !== undefined) {
+      updateData.dataHora = medidaData.dataHora;
+    }
+
+    if (medidaData.valor !== undefined) {
+      updateData.valor = medidaData.valor;
+    }
+
+    if (medidaData.unidade !== undefined) {
+      updateData.unidade = medidaData.unidade;
+    }
+
+    updateData.updatedAt = new Date();
+
+    const updatedMedida = await this.prisma.medidaQuinzeMinutos.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return MedidaQuinzeMinutos.create(
+      updatedMedida.codigoPontoMedicao,
+      updatedMedida.dataHora,
+      updatedMedida.valor,
+      updatedMedida.unidade,
+      updatedMedida.id,
+      updatedMedida.createdAt,
+      updatedMedida.updatedAt,
+    );
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.medidaQuinzeMinutos.delete({
+      where: { id },
+    });
+  }
+
   async deleteByPontoMedicaoAndDateRange(
     codigoPontoMedicao: string,
     dataInicio: Date,

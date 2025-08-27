@@ -8,10 +8,10 @@ import {
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { SearchMedidasQuinzeMinutosCceeUseCase } from '../../application/use-cases/medida-quinze-minutos/search-medidas-quinze-minutos-ccee.use-case';
 import { MedidaQuinzeMinutosCceeResponseDto } from '../../application/dto/medida-quinze-minutos-ccee-response.dto';
-import { MedidaCincoMinutosParamsDto } from '../../application/dto/medida-cinco-minutos-params.dto';
+import { MedidaQuinzeMinutosParamsDto } from '../../application/dto/medida-quinze-minutos-params.dto';
 
-@ApiTags('medidas-quinze-minutos')
-@Controller('medidas-quinze-minutos')
+@ApiTags('medidas-quinze-minutos-ccee')
+@Controller('medidas-quinze-minutos-ccee')
 export class MedidaQuinzeMinutosController {
   constructor(
     private readonly searchMedidasQuinzeMinutosCceeUseCase: SearchMedidasQuinzeMinutosCceeUseCase,
@@ -59,7 +59,7 @@ export class MedidaQuinzeMinutosController {
     description: 'Erro ao conectar com a CCEE',
   })
   async searchByCcee(
-    @Query() params: MedidaCincoMinutosParamsDto,
+    @Query() params: MedidaQuinzeMinutosParamsDto,
   ): Promise<MedidaQuinzeMinutosCceeResponseDto[]> {
     try {
       return await this.searchMedidasQuinzeMinutosCceeUseCase.execute(params);

@@ -33,6 +33,11 @@ import { UpdateEstadoUseCase } from './use-cases/estado/update-estado.use-case';
 import { DeleteEstadoUseCase } from './use-cases/estado/delete-estado.use-case';
 import { SearchMedidasCincoMinutosCceeUseCase } from './use-cases/medida-cinco-minutos/search-medidas-cinco-minutos-ccee.use-case';
 import { SearchMedidasQuinzeMinutosCceeUseCase } from './use-cases/medida-quinze-minutos/search-medidas-quinze-minutos-ccee.use-case';
+import { CreateMedidaQuinzeMinutosUseCase } from './use-cases/medida-quinze-minutos/create-medida-quinze-minutos.use-case';
+import { FindAllMedidasQuinzeMinutosUseCase } from './use-cases/medida-quinze-minutos/find-all-medidas-quinze-minutos.use-case';
+import { FindMedidaQuinzeMinutosByIdUseCase } from './use-cases/medida-quinze-minutos/find-medida-quinze-minutos-by-id.use-case';
+import { UpdateMedidaQuinzeMinutosUseCase } from './use-cases/medida-quinze-minutos/update-medida-quinze-minutos.use-case';
+import { DeleteMedidaQuinzeMinutosUseCase } from './use-cases/medida-quinze-minutos/delete-medida-quinze-minutos.use-case';
 
 @Module({
   imports: [DatabaseModule, HttpModule],
@@ -69,6 +74,11 @@ import { SearchMedidasQuinzeMinutosCceeUseCase } from './use-cases/medida-quinze
     DeleteEstadoUseCase,
     SearchMedidasCincoMinutosCceeUseCase,
     SearchMedidasQuinzeMinutosCceeUseCase,
+    CreateMedidaQuinzeMinutosUseCase,
+    FindAllMedidasQuinzeMinutosUseCase,
+    FindMedidaQuinzeMinutosByIdUseCase,
+    UpdateMedidaQuinzeMinutosUseCase,
+    DeleteMedidaQuinzeMinutosUseCase,
   ],
   exports: [
     CreateUnidadeUseCase,
@@ -103,6 +113,11 @@ import { SearchMedidasQuinzeMinutosCceeUseCase } from './use-cases/medida-quinze
     DeleteEstadoUseCase,
     SearchMedidasCincoMinutosCceeUseCase,
     SearchMedidasQuinzeMinutosCceeUseCase,
+    CreateMedidaQuinzeMinutosUseCase,
+    FindAllMedidasQuinzeMinutosUseCase,
+    FindMedidaQuinzeMinutosByIdUseCase,
+    UpdateMedidaQuinzeMinutosUseCase,
+    DeleteMedidaQuinzeMinutosUseCase,
   ],
 })
 export class ApplicationModule {}

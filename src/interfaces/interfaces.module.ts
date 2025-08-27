@@ -8,6 +8,7 @@ import { RegiaoController } from './controllers/regiao.controller';
 import { EstadoController } from './controllers/estado.controller';
 import { MedidaCincoMinutosController } from './controllers/medida-cinco-minutos.controller';
 import { MedidaQuinzeMinutosController } from './controllers/medida-quinze-minutos.controller';
+import { MedidaQuinzeMinutosCrudController } from './controllers/medida-quinze-minutos-crud.controller';
 import { QueueController } from './controllers/queue.controller';
 
 @Module({
@@ -20,6 +21,7 @@ import { QueueController } from './controllers/queue.controller';
     EstadoController,
     MedidaCincoMinutosController,
     MedidaQuinzeMinutosController,
+    MedidaQuinzeMinutosCrudController,
     QueueController,
   ],
 })
