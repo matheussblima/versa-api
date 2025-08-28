@@ -22,7 +22,7 @@ npx prisma migrate deploy
 
 # Compilar o seed
 echo "📦 Compilando seed..."
-npx tsc prisma/seed.ts --outDir dist/prisma
+npx tsc --project tsconfig.seed.json
 
 # Executar o seed
 echo "🌱 Executando seed do banco de dados..."
