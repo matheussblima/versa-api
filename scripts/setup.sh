@@ -13,7 +13,7 @@ fi
 
 # Instalar dependências
 echo "📦 Instalando dependências..."
-yarn install
+npm run install
 
 # Gerar cliente Prisma
 echo "🔧 Gerando cliente Prisma..."
