@@ -2,9 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,6 +22,7 @@ async function bootstrap() {
     .setDescription('API para gerenciamento de unidades e subunidades')
     .setVersion('1.0')
     .addServer('http://localhost:3000', 'Servidor de Desenvolvimento')
+    .addServer('https://versa-api-orpin.vercel.app', 'Servidor de Produção')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -29,6 +31,14 @@ async function bootstrap() {
       persistAuthorization: true,
     },
     customSiteTitle: 'Versa API - Documentação',
+    customCss: '.swagger-ui .topbar { display: none }',
+    customJs: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.21.0/swagger-ui-bundle.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.21.0/swagger-ui-standalone-preset.js',
+    ],
+    customCssUrl: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.21.0/swagger-ui.css',
+    ],
   });
 
   const port = process.env.PORT || 3000;
