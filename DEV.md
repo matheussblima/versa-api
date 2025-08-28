@@ -85,7 +85,7 @@ yarn docker:migrate
 ## 🌐 URLs de Desenvolvimento
 
 - **API**: http://localhost:3000
-- **Documentação Swagger**: http://localhost:3000/api
+- **Documentação Swagger**: http://localhost:3000/swagger
 - **Prisma Studio**: http://localhost:5555
 - **PostgreSQL**: localhost:5432
 

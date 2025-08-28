@@ -13,6 +13,10 @@
   ],
   "routes": [
     {
+      "src": "/swagger/(.*)",
+      "dest": "dist/src/main.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "dist/src/main.js"
     },

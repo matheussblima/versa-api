@@ -109,7 +109,7 @@ yarn start:prod
 
 A documentação interativa da API está disponível através do Swagger UI:
 
-- **URL**: http://localhost:3000/api
+- **URL**: http://localhost:3000/swagger
 - **Descrição**: Interface interativa para testar todos os endpoints da API
 - **Recursos**:
   - Teste direto dos endpoints
