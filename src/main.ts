@@ -33,12 +33,10 @@ async function bootstrap() {
     customSiteTitle: 'Versa API - Documentação',
     customCss: '.swagger-ui .topbar { display: none }',
     customJs: [
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.21.0/swagger-ui-bundle.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.21.0/swagger-ui-standalone-preset.js',
+      'https://unpkg.com/swagger-ui-dist@5.21.0/swagger-ui-bundle.js',
+      'https://unpkg.com/swagger-ui-dist@5.21.0/swagger-ui-standalone-preset.js',
     ],
-    customCssUrl: [
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.21.0/swagger-ui.css',
-    ],
+    customCssUrl: ['https://unpkg.com/swagger-ui-dist@5.21.0/swagger-ui.css'],
   });
 
   const port = process.env.PORT || 3000;
