@@ -9,7 +9,6 @@ DOCKER.md
 DEV.md
 test
 .vscode
-certs
 scripts
 config.example.env
 test-queue.js
