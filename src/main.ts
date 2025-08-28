@@ -31,8 +31,9 @@ async function bootstrap() {
     customSiteTitle: 'Versa API - Documentação',
   });
 
-  await app.listen(3000);
-  console.log('🚀 Aplicação rodando em: http://localhost:3000');
-  console.log('📚 Documentação Swagger em: http://localhost:3000/api');
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`🚀 Aplicação rodando em: http://localhost:${port}`);
+  console.log(`📚 Documentação Swagger em: http://localhost:${port}/api`);
 }
 bootstrap();
