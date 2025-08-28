@@ -7,7 +7,7 @@ async function main() {
 
   try {
     await prisma.$connect();
-    console.log('✅ Conexão com o banco estabelecida');
+    console.log('✅ Conexão com o banco estabelecida com sucesso');
 
     // Criar regiões
     const regioes = [
