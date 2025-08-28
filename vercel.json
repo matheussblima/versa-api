@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "yarn build:vercel",
   "builds": [
     {
       "src": "dist/src/main.js",
@@ -15,5 +15,10 @@
       "src": "/(.*)",
       "dest": "dist/src/main.js"
     }
-  ]
+  ],
+  "functions": {
+    "dist/src/main.js": {
+      "maxDuration": 30
+    }
+  }
 }

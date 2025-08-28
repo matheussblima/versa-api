@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY yarn.lock ./
 
 # Instalar dependências
-RUN num install --frozen-lockfile
+RUN npm install --frozen-lockfile
 
 # Copiar código fonte
 COPY . .
