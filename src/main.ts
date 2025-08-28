@@ -17,6 +17,8 @@ async function bootstrap() {
 
   app.enableCors();
 
+  app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('Versa API')
     .setDescription('API para gerenciamento de unidades e subunidades')
