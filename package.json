@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "prisma generate && tsc prisma/seed.ts --outDir dist/prisma && nest build",
-    "build:vercel": "prisma generate && prisma migrate deploy && tsc prisma/seed.ts --outDir dist/prisma && node dist/prisma/seed.js && nest build",
+    "build:vercel": "./vercel-build.sh",
     "postinstall": "prisma generate",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
