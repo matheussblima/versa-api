@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "dist/src/main.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "certs/**"
+      }
     }
   ],
   "routes": [
@@ -11,10 +14,5 @@
       "src": "/(.*)",
       "dest": "dist/src/main.js"
     }
-  ],
-  "functions": {
-    "dist/src/main.js": {
-      "includeFiles": "certs/**"
-    }
-  }
+  ]
 }
