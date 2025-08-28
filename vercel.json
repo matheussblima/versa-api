@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npx prisma generate && npm run build",
-  "outputDirectory": "dist",
   "builds": [
     {
       "src": "dist/src/main.js",
@@ -14,10 +12,5 @@
       "dest": "dist/src/main.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
     }
-  ],
-  "functions": {
-    "dist/src/main.js": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }

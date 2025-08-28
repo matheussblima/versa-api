@@ -17,4 +17,3 @@ test-queue.js
 .env
 .env.local
 .env.production
-dist
