@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "prisma generate && nest build",
-    "postinstall": "prisma generate && prisma migrate deploy && npm run db:seed",
+    "build": "prisma generate && tsc prisma/seed.ts --outDir dist/prisma && nest build",
+    "postinstall": "prisma generate && prisma migrate deploy && npm run db:seed:prod",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -25,6 +25,7 @@
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
     "db:seed": "ts-node prisma/seed.ts",
+    "db:seed:prod": "node dist/prisma/seed.js",
     "dev": "concurrently \"yarn start:dev\" \"yarn db:studio\"",
     "dev:docker": "docker-compose up -d postgres && yarn db:generate && yarn db:migrate && yarn start:dev",
     "dev:full": "concurrently \"yarn start:dev\" \"yarn db:studio\" \"yarn docker:postgres\"",
