@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY yarn.lock ./
 
 # Instalar dependências
-RUN yarn install --frozen-lockfile
+RUN num install --frozen-lockfile
 
 # Copiar código fonte
 COPY . .
@@ -30,7 +30,7 @@ WORKDIR /app
 # Instalar apenas dependências de produção
 COPY package*.json ./
 COPY yarn.lock ./
-RUN yarn install --frozen-lockfile --production
+RUN npm install --frozen-lockfile --production
 
 # Copiar arquivos buildados e necessários
 COPY --from=builder /app/dist ./dist
