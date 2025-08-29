@@ -27,6 +27,26 @@ export class PrismaService
         },
       },
     });
+
+    this.$on('query', (e) => {
+      this.logger.debug(`Query: ${e.query}`);
+      this.logger.debug(`Params: ${e.params}`);
+      this.logger.debug(`Duration: ${e.duration}ms`);
+    });
+
+    this.$on('error', (e) => {
+      this.logger.error(`Prisma Error: ${e.message}`);
+
+      if (
+        e.message.includes('prepared statement') ||
+        e.message.includes('already exists')
+      ) {
+        this.logger.warn(
+          'Detectado erro de prepared statement. Tentando reconectar...',
+        );
+        this.handlePreparedStatementError();
+      }
+    });
   }
 
   async onModuleInit() {
@@ -73,9 +93,57 @@ export class PrismaService
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  // Método para lidar com erros de prepared statements
+  private async handlePreparedStatementError(): Promise<void> {
+    try {
+      this.logger.log('🔄 Reconectando devido a erro de prepared statement...');
+      await this.$disconnect();
+      await this.delay(1000); // Aguardar 1 segundo
+      await this.$connect();
+      this.logger.log('✅ Reconexão bem-sucedida!');
+    } catch (error) {
+      this.logger.error('❌ Falha na reconexão:', error.message);
+    }
+  }
+
+  // Método para executar queries com retry automático
+  async executeWithRetry<T>(operation: () => Promise<T>): Promise<T> {
+    const maxRetries = 3;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        const errorMessage = error.message || '';
+
+        if (
+          errorMessage.includes('prepared statement') ||
+          errorMessage.includes('already exists') ||
+          errorMessage.includes('connection')
+        ) {
+          this.logger.warn(
+            `Tentativa ${attempt}/${maxRetries} falhou: ${errorMessage}`,
+          );
+
+          if (attempt < maxRetries) {
+            await this.handlePreparedStatementError();
+            await this.delay(500 * attempt); // Delay progressivo
+            continue;
+          }
+        }
+
+        throw error;
+      }
+    }
+
+    throw new Error('Máximo de tentativas excedido');
+  }
+
   async healthCheck(): Promise<boolean> {
     try {
-      await this.$queryRaw`SELECT 1`;
+      await this.executeWithRetry(async () => {
+        await this.$queryRaw`SELECT 1`;
+      });
       return true;
     } catch (error) {
       this.logger.error('Falha no health check do banco de dados:', error);
