@@ -21,22 +21,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Redis para filas
-  redis:
-    image: redis:7-alpine
-    container_name: versa-redis
-    ports:
-      - '6379:6379'
-    volumes:
-      - redis_data:/data
-    networks:
-      - versa-network
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   # Aplicação NestJS
   api:
     build:
@@ -45,15 +29,11 @@ services:
     container_name: versa-api
     environment:
       DATABASE_URL: postgresql://postgres:password@postgres:5432/versa_api?schema=public
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
       NODE_ENV: production
     ports:
       - '3000:3000'
     depends_on:
       postgres:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     networks:
       - versa-network
@@ -81,7 +61,6 @@ services:
 
 volumes:
   postgres_data:
-  redis_data:
 
 networks:
   versa-network:

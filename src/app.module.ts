@@ -6,7 +6,7 @@ import { DatabaseModule } from './infrastructure/database/database.module';
 import { HttpModule } from './infrastructure/http/http.module';
 import { ApplicationModule } from './application/application.module';
 import { InterfacesModule } from './interfaces/interfaces.module';
-import { QueueModule } from './infrastructure/queue/queue.module';
+import { SchedulerModule } from './infrastructure/scheduler/scheduler.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { QueueModule } from './infrastructure/queue/queue.module';
     HttpModule,
     ApplicationModule,
     InterfacesModule,
-    QueueModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

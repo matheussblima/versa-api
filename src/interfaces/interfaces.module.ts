@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ApplicationModule } from '../application/application.module';
-import { QueueModule } from '../infrastructure/queue/queue.module';
 import { UnidadeController } from './controllers/unidade.controller';
 import { SubUnidadeController } from './controllers/subunidade.controller';
 import { PontoDeMedicaoController } from './controllers/ponto-de-medicao.controller';
@@ -9,10 +8,11 @@ import { EstadoController } from './controllers/estado.controller';
 import { MedidaCincoMinutosController } from './controllers/medida-cinco-minutos.controller';
 import { MedidaQuinzeMinutosController } from './controllers/medida-quinze-minutos-ccee.controller';
 import { MedidaQuinzeMinutosCrudController } from './controllers/medida-quinze-minutos.controller';
-import { QueueController } from './controllers/queue.controller';
+import { MedidaQuinzeMinutosSyncController } from './controllers/medida-quinze-minutos-sync.controller';
+import { SchedulerController } from './controllers/scheduler.controller';
 
 @Module({
-  imports: [ApplicationModule, QueueModule],
+  imports: [ApplicationModule],
   controllers: [
     UnidadeController,
     SubUnidadeController,
@@ -22,7 +22,8 @@ import { QueueController } from './controllers/queue.controller';
     MedidaCincoMinutosController,
     MedidaQuinzeMinutosController,
     MedidaQuinzeMinutosCrudController,
-    QueueController,
+    MedidaQuinzeMinutosSyncController,
+    SchedulerController,
   ],
 })
 export class InterfacesModule {}
