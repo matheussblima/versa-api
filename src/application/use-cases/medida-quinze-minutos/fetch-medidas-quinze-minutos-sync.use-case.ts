@@ -157,10 +157,12 @@ export class FetchMedidasQuinzeMinutosSyncUseCase {
 
     while (hasMoreData) {
       try {
+        const formattedDate = this.formatDateForCcee(referenceDate);
+
         const measures =
           await this.cceeMedidaQuinzeMinutosService.fetchMedidasQuinzeMinutos({
             codigoPontoMedicao: measurementPointCode,
-            dataReferencia: referenceDate,
+            dataReferencia: formattedDate,
             numero: pageNumber,
             quantidadeItens: 500,
           });
@@ -288,5 +290,14 @@ export class FetchMedidasQuinzeMinutosSyncUseCase {
       );
       throw error;
     }
+  }
+
+  private formatDateForCcee(dateString: string): string {
+    if (dateString.includes('T')) {
+      return dateString;
+    }
+
+    const date = new Date(dateString);
+    return date.toISOString();
   }
 }

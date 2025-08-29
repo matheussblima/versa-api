@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ApplicationModule } from '../application/application.module';
+import { SchedulerModule } from '../infrastructure/scheduler/scheduler.module';
 import { UnidadeController } from './controllers/unidade.controller';
 import { SubUnidadeController } from './controllers/subunidade.controller';
 import { PontoDeMedicaoController } from './controllers/ponto-de-medicao.controller';
@@ -12,7 +13,7 @@ import { MedidaQuinzeMinutosSyncController } from './controllers/medida-quinze-m
 import { SchedulerController } from './controllers/scheduler.controller';
 
 @Module({
-  imports: [ApplicationModule],
+  imports: [ApplicationModule, SchedulerModule],
   controllers: [
     UnidadeController,
     SubUnidadeController,
