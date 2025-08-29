@@ -16,11 +16,12 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
-  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateMedidaQuinzeMinutosDto } from '../../application/dto/create-medida-quinze-minutos.dto';
 import { UpdateMedidaQuinzeMinutosDto } from '../../application/dto/update-medida-quinze-minutos.dto';
 import { MedidaQuinzeMinutosResponseDto } from '../../application/dto/medida-quinze-minutos-response.dto';
+import { MedidaQuinzeMinutosPaginatedResponseDto } from '../../application/dto/medida-quinze-minutos-paginated-response.dto';
+import { FindAllMedidasQuinzeMinutosParamsDto } from '../../application/dto/find-all-medidas-quinze-minutos-params.dto';
 import { CreateMedidaQuinzeMinutosUseCase } from '../../application/use-cases/medida-quinze-minutos/create-medida-quinze-minutos.use-case';
 import { FindAllMedidasQuinzeMinutosUseCase } from '../../application/use-cases/medida-quinze-minutos/find-all-medidas-quinze-minutos.use-case';
 import { FindMedidaQuinzeMinutosByIdUseCase } from '../../application/use-cases/medida-quinze-minutos/find-medida-quinze-minutos-by-id.use-case';
@@ -63,30 +64,18 @@ export class MedidaQuinzeMinutosCrudController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todas as medidas de quinze minutos' })
-  @ApiQuery({
-    name: 'codigoPontoMedicao',
-    description: 'Código do ponto de medição para filtrar as medidas',
-    required: false,
-    example: 'RSPKSCALADM01',
-  })
-  @ApiQuery({
-    name: 'unidadeId',
-    description: 'ID da unidade para filtrar as medidas',
-    required: false,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
   @ApiResponse({
     status: 200,
-    description: 'Lista de medidas de quinze minutos retornada com sucesso',
-    type: [MedidaQuinzeMinutosResponseDto],
+    description:
+      'Lista paginada de medidas de quinze minutos retornada com sucesso',
+    type: MedidaQuinzeMinutosPaginatedResponseDto,
   })
-  findAll(
-    @Query('codigoPontoMedicao') codigoPontoMedicao?: string,
-    @Query('unidadeId') unidadeId?: string,
-  ) {
+  findAll(@Query() params: FindAllMedidasQuinzeMinutosParamsDto) {
     return this.findAllMedidasQuinzeMinutosUseCase.execute(
-      codigoPontoMedicao,
-      unidadeId,
+      params.codigoPontoMedicao,
+      params.unidadeId,
+      params.page,
+      params.limit,
     );
   }
 

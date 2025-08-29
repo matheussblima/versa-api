@@ -190,7 +190,9 @@ export class MedidaQuinzeMinutosRepository
   async findAll(
     codigoPontoMedicao?: string,
     unidadeId?: string,
-  ): Promise<MedidaQuinzeMinutos[]> {
+    page?: number,
+    limit?: number,
+  ): Promise<{ data: MedidaQuinzeMinutos[]; total: number }> {
     const where: any = {};
 
     if (codigoPontoMedicao) {
@@ -205,14 +207,25 @@ export class MedidaQuinzeMinutosRepository
       };
     }
 
-    const medidas = await this.prisma.medidaQuinzeMinutos.findMany({
-      where,
-      orderBy: {
-        dataHora: 'desc',
-      },
-    });
+    const pageNumber = page || 1;
+    const pageSize = limit || 20;
+    const skip = (pageNumber - 1) * pageSize;
 
-    return medidas.map((medida) =>
+    const [medidas, total] = await Promise.all([
+      this.prisma.medidaQuinzeMinutos.findMany({
+        where,
+        orderBy: {
+          dataHora: 'desc',
+        },
+        skip,
+        take: pageSize,
+      }),
+      this.prisma.medidaQuinzeMinutos.count({
+        where,
+      }),
+    ]);
+
+    const data = medidas.map((medida) =>
       MedidaQuinzeMinutos.create(
         medida.codigoPontoMedicao,
         medida.dataHora,
@@ -223,6 +236,8 @@ export class MedidaQuinzeMinutosRepository
         medida.updatedAt,
       ),
     );
+
+    return { data, total };
   }
 
   async findById(id: string): Promise<MedidaQuinzeMinutos | null> {

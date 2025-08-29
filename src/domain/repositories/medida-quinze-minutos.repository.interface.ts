@@ -9,7 +9,9 @@ export interface IMedidaQuinzeMinutosRepository {
   findAll(
     codigoPontoMedicao?: string,
     unidadeId?: string,
-  ): Promise<MedidaQuinzeMinutos[]>;
+    page?: number,
+    limit?: number,
+  ): Promise<{ data: MedidaQuinzeMinutos[]; total: number }>;
   findById(id: string): Promise<MedidaQuinzeMinutos | null>;
   findByPontoMedicaoAndDateRange(
     codigoPontoMedicao: string,
