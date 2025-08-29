@@ -46,4 +46,5 @@ async function bootstrap() {
   console.log(`🚀 Aplicação rodando em: http://localhost:${port}`);
   console.log(`📚 Documentação Swagger em: http://localhost:${port}/swagger`);
 }
+
 bootstrap();
