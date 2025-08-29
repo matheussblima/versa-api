@@ -69,13 +69,25 @@ export class MedidaQuinzeMinutosCrudController {
     required: false,
     example: 'RSPKSCALADM01',
   })
+  @ApiQuery({
+    name: 'unidadeId',
+    description: 'ID da unidade para filtrar as medidas',
+    required: false,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de medidas de quinze minutos retornada com sucesso',
     type: [MedidaQuinzeMinutosResponseDto],
   })
-  findAll(@Query('codigoPontoMedicao') codigoPontoMedicao?: string) {
-    return this.findAllMedidasQuinzeMinutosUseCase.execute(codigoPontoMedicao);
+  findAll(
+    @Query('codigoPontoMedicao') codigoPontoMedicao?: string,
+    @Query('unidadeId') unidadeId?: string,
+  ) {
+    return this.findAllMedidasQuinzeMinutosUseCase.execute(
+      codigoPontoMedicao,
+      unidadeId,
+    );
   }
 
   @Get(':id')

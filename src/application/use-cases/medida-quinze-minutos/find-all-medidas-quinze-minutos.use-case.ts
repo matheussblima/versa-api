@@ -15,10 +15,13 @@ export class FindAllMedidasQuinzeMinutosUseCase {
 
   async execute(
     codigoPontoMedicao?: string,
+    unidadeId?: string,
   ): Promise<MedidaQuinzeMinutosResponseDto[]> {
     try {
-      const medidas =
-        await this.medidaQuinzeMinutosRepository.findAll(codigoPontoMedicao);
+      const medidas = await this.medidaQuinzeMinutosRepository.findAll(
+        codigoPontoMedicao,
+        unidadeId,
+      );
       return MedidaQuinzeMinutosMapper.toResponseDtoList(medidas);
     } catch (error) {
       throw new Error(

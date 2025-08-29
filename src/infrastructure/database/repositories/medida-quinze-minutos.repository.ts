@@ -187,11 +187,22 @@ export class MedidaQuinzeMinutosRepository
     return count > 0;
   }
 
-  async findAll(codigoPontoMedicao?: string): Promise<MedidaQuinzeMinutos[]> {
+  async findAll(
+    codigoPontoMedicao?: string,
+    unidadeId?: string,
+  ): Promise<MedidaQuinzeMinutos[]> {
     const where: any = {};
 
     if (codigoPontoMedicao) {
       where.codigoPontoMedicao = codigoPontoMedicao;
+    }
+
+    if (unidadeId) {
+      where.pontoDeMedicao = {
+        subUnidade: {
+          unidadeId: unidadeId,
+        },
+      };
     }
 
     const medidas = await this.prisma.medidaQuinzeMinutos.findMany({
