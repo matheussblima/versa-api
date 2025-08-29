@@ -28,6 +28,14 @@ export class MedidaQuinzeMinutosParamsDto {
   dataReferencia: string;
 
   @ApiProperty({
+    description: 'Código do perfil do agente',
+    example: '1234567890',
+  })
+  @IsString()
+  @IsNotEmpty()
+  codigoPerfilAgente: string;
+
+  @ApiProperty({
     description: 'Número da página (padrão: 1)',
     example: 1,
     required: false,

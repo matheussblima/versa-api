@@ -21,6 +21,7 @@ export class SearchMedidasCincoMinutosCceeUseCase {
       const medidas =
         await this.cceeMedidaCincoMinutosService.fetchMedidasCincoMinutos({
           codigoPontoMedicao: params.codigoPontoMedicao,
+          codigoPerfilAgente: params.codigoCCEE,
           dataReferencia: params.dataReferencia,
           numero: params.numero || 1,
           quantidadeItens: params.quantidadeItens || 500,

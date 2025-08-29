@@ -75,6 +75,7 @@ export interface CceeMedidaCincoMinutosSoapResponse {
  */
 export interface CceeMedidaCincoMinutosParams {
   codigoPontoMedicao: string;
+  codigoPerfilAgente: string;
   dataReferencia: string;
   numero?: number;
   quantidadeItens?: number;

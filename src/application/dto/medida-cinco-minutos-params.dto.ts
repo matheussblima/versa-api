@@ -20,6 +20,14 @@ export class MedidaCincoMinutosParamsDto {
   codigoPontoMedicao: string;
 
   @ApiProperty({
+    description: 'Código CCEE (código do perfil do agente)',
+    example: 'CCEE001',
+  })
+  @IsString()
+  @IsNotEmpty()
+  codigoCCEE: string;
+
+  @ApiProperty({
     description: 'Data de referência para consulta (formato ISO)',
     example: '2024-01-15T00:00:00.000Z',
   })

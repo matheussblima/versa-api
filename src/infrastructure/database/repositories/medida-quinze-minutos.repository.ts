@@ -68,65 +68,78 @@ export class MedidaQuinzeMinutosRepository
       medidasPorPonto.get(medida.codigoPontoMedicao)!.push(medida);
     }
 
-    const savedMedidas: MedidaQuinzeMinutos[] = [];
+    const codigosPontos = Array.from(medidasPorPonto.keys());
+    const pontosDeMedicao = await this.prisma.pontoDeMedicao.findMany({
+      where: { codigo: { in: codigosPontos } },
+    });
 
-    for (const [codigoPonto, medidasDoPonto] of medidasPorPonto) {
-      const pontoDeMedicao = await this.prisma.pontoDeMedicao.findUnique({
-        where: { codigo: codigoPonto },
-      });
+    const pontosMap = new Map(
+      pontosDeMedicao.map((ponto) => [ponto.codigo, ponto]),
+    );
 
-      if (!pontoDeMedicao) {
+    for (const codigoPonto of codigosPontos) {
+      if (!pontosMap.has(codigoPonto)) {
         throw new Error(
           `Ponto de medição com código ${codigoPonto} não encontrado`,
         );
       }
-
-      const resultado = await this.prisma.$transaction(async (tx) => {
-        const saved: MedidaQuinzeMinutos[] = [];
-
-        for (const medida of medidasDoPonto) {
-          const savedMedida = await tx.medidaQuinzeMinutos.upsert({
-            where: {
-              codigoPontoMedicao_dataHora: {
-                codigoPontoMedicao: medida.codigoPontoMedicao,
-                dataHora: medida.dataHora,
-              },
-            },
-            update: {
-              valor: medida.valor,
-              unidade: medida.unidade,
-              updatedAt: new Date(),
-            },
-            create: {
-              id: medida.id,
-              codigoPontoMedicao: medida.codigoPontoMedicao,
-              dataHora: medida.dataHora,
-              valor: medida.valor,
-              unidade: medida.unidade,
-              pontoDeMedicaoId: pontoDeMedicao.id,
-            },
-          });
-
-          saved.push(
-            MedidaQuinzeMinutos.create(
-              savedMedida.codigoPontoMedicao,
-              savedMedida.dataHora,
-              savedMedida.valor,
-              savedMedida.unidade,
-              savedMedida.id,
-              savedMedida.createdAt,
-              savedMedida.updatedAt,
-            ),
-          );
-        }
-
-        return saved;
-      });
-
-      savedMedidas.push(...resultado);
     }
 
-    return savedMedidas;
+    try {
+      return await this.prisma.$transaction(
+        async (tx) => {
+          const savedMedidas: MedidaQuinzeMinutos[] = [];
+
+          for (const [codigoPonto, medidasDoPonto] of medidasPorPonto) {
+            const pontoDeMedicao = pontosMap.get(codigoPonto)!;
+
+            for (const medida of medidasDoPonto) {
+              const savedMedida = await tx.medidaQuinzeMinutos.upsert({
+                where: {
+                  codigoPontoMedicao_dataHora: {
+                    codigoPontoMedicao: medida.codigoPontoMedicao,
+                    dataHora: medida.dataHora,
+                  },
+                },
+                update: {
+                  valor: medida.valor,
+                  unidade: medida.unidade,
+                  updatedAt: new Date(),
+                },
+                create: {
+                  id: medida.id,
+                  codigoPontoMedicao: medida.codigoPontoMedicao,
+                  dataHora: medida.dataHora,
+                  valor: medida.valor,
+                  unidade: medida.unidade,
+                  pontoDeMedicaoId: pontoDeMedicao.id,
+                },
+              });
+
+              savedMedidas.push(
+                MedidaQuinzeMinutos.create(
+                  savedMedida.codigoPontoMedicao,
+                  savedMedida.dataHora,
+                  savedMedida.valor,
+                  savedMedida.unidade,
+                  savedMedida.id,
+                  savedMedida.createdAt,
+                  savedMedida.updatedAt,
+                ),
+              );
+            }
+          }
+
+          return savedMedidas;
+        },
+        {
+          timeout: 30000, // 30 segundos de timeout
+        },
+      );
+    } catch (error) {
+      console.error('Erro na transação do Prisma:', error);
+      throw error;
+    }
   }
 
   async findByPontoMedicaoAndDateRange(

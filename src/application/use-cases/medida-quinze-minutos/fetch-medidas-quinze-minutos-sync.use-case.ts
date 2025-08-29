@@ -11,6 +11,10 @@ import {
   IMedidaQuinzeMinutosRepository,
   MEDIDA_QUINZE_MINUTOS_REPOSITORY,
 } from '../../../domain/repositories/medida-quinze-minutos.repository.interface';
+import {
+  IUnidadeRepository,
+  UNIDADE_REPOSITORY,
+} from '../../../domain/repositories/unidade.repository.interface';
 import { MedidaQuinzeMinutos } from '../../../domain/entities/medida-quinze-minutos.entity';
 
 export interface FetchMedidasQuinzeMinutosSyncParams {
@@ -46,6 +50,8 @@ export class FetchMedidasQuinzeMinutosSyncUseCase {
     private readonly pontoDeMedicaoRepository: IPontoDeMedicaoRepository,
     @Inject(MEDIDA_QUINZE_MINUTOS_REPOSITORY)
     private readonly medidaQuinzeMinutosRepository: IMedidaQuinzeMinutosRepository,
+    @Inject(UNIDADE_REPOSITORY)
+    private readonly unidadeRepository: IUnidadeRepository,
   ) {}
 
   async execute(
@@ -69,21 +75,20 @@ export class FetchMedidasQuinzeMinutosSyncUseCase {
     };
 
     try {
-      let measurementPoints: any[];
+      const unidades = await this.unidadeRepository.findAll();
+      const measurementPoints = [];
 
-      if (measurementPointCode) {
-        const point =
-          await this.pontoDeMedicaoRepository.findByCodigo(
-            measurementPointCode,
-          );
-        if (!point) {
-          throw new Error(
-            `Ponto de medição ${measurementPointCode} não encontrado`,
-          );
+      for (const unidade of unidades) {
+        if (unidade.subUnidades) {
+          for (const subUnidade of unidade.subUnidades) {
+            if (subUnidade.pontoDeMedicao) {
+              measurementPoints.push({
+                ...subUnidade.pontoDeMedicao,
+                codigoCcee: unidade.codigoCCEE,
+              });
+            }
+          }
         }
-        measurementPoints = [point];
-      } else {
-        measurementPoints = await this.pontoDeMedicaoRepository.findAll();
       }
 
       result.totalPoints = measurementPoints.length;
@@ -98,6 +103,7 @@ export class FetchMedidasQuinzeMinutosSyncUseCase {
             referenceDate,
             point.codigo,
             forceUpdate,
+            point.codigoCcee,
           );
 
           result.details.push(pointResult);
@@ -141,6 +147,7 @@ export class FetchMedidasQuinzeMinutosSyncUseCase {
     referenceDate: string,
     measurementPointCode: string,
     forceUpdate: boolean,
+    codigoPerfilAgente: string,
   ): Promise<{
     pointCode: string;
     measuresFound: number;
@@ -164,6 +171,7 @@ export class FetchMedidasQuinzeMinutosSyncUseCase {
             codigoPontoMedicao: measurementPointCode,
             dataReferencia: formattedDate,
             numero: pageNumber,
+            codigoPerfilAgente,
             quantidadeItens: 500,
           });
 

@@ -29,6 +29,11 @@ export class MedidaCincoMinutosController {
     example: 'RSPKSCALADM01',
   })
   @ApiQuery({
+    name: 'codigoCCEE',
+    description: 'Código CCEE (código do perfil do agente)',
+    example: 'CCEE001',
+  })
+  @ApiQuery({
     name: 'dataReferencia',
     description: 'Data de referência para consulta (formato ISO)',
     example: '2024-01-15T00:00:00.000Z',

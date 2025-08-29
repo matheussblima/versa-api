@@ -16,7 +16,6 @@ export class CceeMedidaCincoMinutosService
   constructor(private readonly cceeApiService: CceeApiService) {}
 
   private buildSoapEnvelope(params: CceeMedidaCincoMinutosParams): string {
-    const codigoPerfilAgente = process.env.CCEE_CODIGO_PERFIL_AGENTE || '';
     const username = process.env.CCEE_USERNAME || '';
     const password = process.env.CCEE_PASSWORD || '';
     const numero = params.numero || 1;
@@ -26,7 +25,7 @@ export class CceeMedidaCincoMinutosService
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mh="http://xmlns.energia.org.br/MH/v2" xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:bm="http://xmlns.energia.org.br/BM/v2" xmlns:bo="http://xmlns.energia.org.br/BO/v2">
    <soapenv:Header>
       <mh:messageHeader>
-         <mh:codigoPerfilAgente>${codigoPerfilAgente}</mh:codigoPerfilAgente>
+         <mh:codigoPerfilAgente>${params.codigoPerfilAgente}</mh:codigoPerfilAgente>
       </mh:messageHeader>
       <oas:Security>
          <oas:UsernameToken>

@@ -24,6 +24,7 @@ export class SearchMedidasQuinzeMinutosCceeUseCase {
           dataReferencia: params.dataReferencia,
           numero: params.numero || 1,
           quantidadeItens: params.quantidadeItens || 500,
+          codigoPerfilAgente: params.codigoPerfilAgente,
         });
 
       return MedidaQuinzeMinutosCceeMapper.toResponseDtoList(medidas);
