@@ -74,6 +74,8 @@ export class MedidaQuinzeMinutosCrudController {
     return this.findAllMedidasQuinzeMinutosUseCase.execute(
       params.codigoPontoMedicao,
       params.unidadeId,
+      params.dataInicio,
+      params.dataFim,
       params.page,
       params.limit,
     );

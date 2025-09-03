@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { IMedidaQuinzeMinutosRepository } from '../../../domain/repositories/medida-quinze-minutos.repository.interface';
 import { MedidaQuinzeMinutos } from '../../../domain/entities/medida-quinze-minutos.entity';
+import { parseISO, startOfDay, endOfDay } from 'date-fns';
 
 @Injectable()
 export class MedidaQuinzeMinutosRepository
@@ -190,6 +191,8 @@ export class MedidaQuinzeMinutosRepository
   async findAll(
     codigoPontoMedicao?: string,
     unidadeId?: string,
+    dataInicio?: string,
+    dataFim?: string,
     page?: number,
     limit?: number,
   ): Promise<{ data: MedidaQuinzeMinutos[]; total: number }> {
@@ -205,6 +208,18 @@ export class MedidaQuinzeMinutosRepository
           unidadeId: unidadeId,
         },
       };
+    }
+
+    if (dataInicio || dataFim) {
+      where.dataHora = {};
+      if (dataInicio) {
+        const dataInicioDate = parseISO(dataInicio);
+        where.dataHora.gte = startOfDay(dataInicioDate);
+      }
+      if (dataFim) {
+        const dataFimDate = parseISO(dataFim);
+        where.dataHora.lte = endOfDay(dataFimDate);
+      }
     }
 
     const pageNumber = page || 1;

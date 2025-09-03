@@ -16,17 +16,17 @@ echo "✅ Variáveis de ambiente configuradas"
 echo "🔧 Gerando cliente Prisma..."
 npx prisma generate
 
-# Executar migrações em produção
-echo "🗄️ Executando migrações do banco de dados..."
-npx prisma migrate deploy
+# # Executar migrações em produção
+# echo "🗄️ Executando migrações do banco de dados..."
+# npx prisma migrate deploy
 
-# Compilar o seed
-echo "📦 Compilando seed..."
-npx tsc --project tsconfig.seed.json
+# # Compilar o seed
+# echo "📦 Compilando seed..."
+# npx tsc --project tsconfig.seed.json
 
-# Executar o seed
-echo "🌱 Executando seed do banco de dados..."
-node dist/prisma/seed.js
+# # Executar o seed
+# echo "🌱 Executando seed do banco de dados..."
+# node dist/prisma/seed.js
 
 # Build da aplicação
 echo "🏗️ Build da aplicação..."

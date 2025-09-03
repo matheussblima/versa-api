@@ -16,6 +16,8 @@ export class FindAllMedidasQuinzeMinutosUseCase {
   async execute(
     codigoPontoMedicao?: string,
     unidadeId?: string,
+    dataInicio?: string,
+    dataFim?: string,
     page?: number,
     limit?: number,
   ): Promise<MedidaQuinzeMinutosPaginatedResponseDto> {
@@ -23,6 +25,8 @@ export class FindAllMedidasQuinzeMinutosUseCase {
       const result = await this.medidaQuinzeMinutosRepository.findAll(
         codigoPontoMedicao,
         unidadeId,
+        dataInicio,
+        dataFim,
         page,
         limit,
       );

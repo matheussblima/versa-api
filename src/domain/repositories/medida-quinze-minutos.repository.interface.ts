@@ -9,6 +9,8 @@ export interface IMedidaQuinzeMinutosRepository {
   findAll(
     codigoPontoMedicao?: string,
     unidadeId?: string,
+    dataInicio?: string,
+    dataFim?: string,
     page?: number,
     limit?: number,
   ): Promise<{ data: MedidaQuinzeMinutos[]; total: number }>;

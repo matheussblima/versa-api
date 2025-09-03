@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  Min,
+  Max,
+  IsDateString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class FindAllMedidasQuinzeMinutosParamsDto {
@@ -20,6 +27,24 @@ export class FindAllMedidasQuinzeMinutosParamsDto {
   @IsOptional()
   @IsString()
   unidadeId?: string;
+
+  @ApiProperty({
+    description: 'Data de início para filtrar as medidas (formato: YYYY-MM-DD)',
+    example: '2024-01-01',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  dataInicio?: string;
+
+  @ApiProperty({
+    description: 'Data de fim para filtrar as medidas (formato: YYYY-MM-DD)',
+    example: '2024-12-31',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  dataFim?: string;
 
   @ApiProperty({
     description: 'Número da página (padrão: 1)',
