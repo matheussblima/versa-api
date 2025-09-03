@@ -107,6 +107,13 @@ export class PrismaUnidadeRepository implements IUnidadeRepository {
     );
   }
 
+  async findByCodigoCCEE(codigoCCEE: string): Promise<Unidade | null> {
+    const found = await this.prisma.unidades.findUnique({
+      where: { codigoCCEE },
+    });
+    return found;
+  }
+
   async findAll(): Promise<Unidade[]> {
     const found = await this.prisma.unidades.findMany({
       include: {

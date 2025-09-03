@@ -9,6 +9,7 @@ export interface IPldRepository {
     dataFim?: Date,
     codigoSubmercado?: string,
     tipo?: string,
+    unidadeId?: string,
     page?: number,
     limit?: number,
   ): Promise<{ plds: PLD[]; total: number }>;

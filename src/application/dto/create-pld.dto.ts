@@ -35,6 +35,14 @@ export class CreatePldDto {
   valor: number;
 
   @ApiProperty({
+    description: 'ID da unidade',
+    example: 'uuid-da-unidade',
+  })
+  @IsString()
+  @IsNotEmpty()
+  unidadeId: string;
+
+  @ApiProperty({
     description: 'Moeda do valor',
     example: 'BRL',
     default: 'BRL',

@@ -9,6 +9,7 @@ export class PLD {
     public readonly valor: number,
     public readonly moeda: string,
     public readonly tipo: string,
+    public readonly unidadeId: string,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
@@ -18,6 +19,7 @@ export class PLD {
     submercado: string,
     codigoSubmercado: string,
     valor: number,
+    unidadeId: string,
     moeda: string = 'BRL',
     tipo: string = 'HORARIO',
   ): PLD {
@@ -30,6 +32,7 @@ export class PLD {
       valor,
       moeda,
       tipo,
+      unidadeId,
       now,
       now,
     );

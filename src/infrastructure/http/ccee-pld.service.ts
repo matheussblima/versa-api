@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { CceeApiService } from './ccee-api.service';
 import { PLD } from '../../domain/entities/pld.entity';
 import * as xml2js from 'xml2js';
@@ -7,12 +7,20 @@ import {
   CceePldParams,
   CceePldSoapResponse,
 } from '../../domain/types/ccee-pld.types';
+import {
+  IUnidadeRepository,
+  UNIDADE_REPOSITORY,
+} from '../../domain/repositories/unidade.repository.interface';
 
 @Injectable()
 export class CceePldService implements ICceePldService {
   private readonly logger = new Logger(CceePldService.name);
 
-  constructor(private readonly cceeApiService: CceeApiService) {}
+  constructor(
+    private readonly cceeApiService: CceeApiService,
+    @Inject(UNIDADE_REPOSITORY)
+    private readonly unidadeRepository: IUnidadeRepository,
+  ) {}
 
   private buildSoapEnvelope(params: CceePldParams): string {
     const username = process.env.CCEE_USERNAME || '';
@@ -71,10 +79,19 @@ export class CceePldService implements ICceePldService {
     }
   }
 
-  private convertToPldEntities(soapResponse: CceePldSoapResponse): PLD[] {
+  private async convertToPldEntities(
+    soapResponse: CceePldSoapResponse,
+    codigoCCEE: string,
+  ): Promise<PLD[]> {
     const plds: PLD[] = [];
 
     try {
+      const unidades =
+        await this.unidadeRepository.findByCodigoCCEE(codigoCCEE);
+      if (!unidades) {
+        throw new Error('Nenhuma unidade encontrada no banco de dados');
+      }
+
       this.logger.debug(
         'Iniciando conversão da resposta SOAP para entidades PLD',
       );
@@ -143,6 +160,7 @@ export class CceePldService implements ICceePldService {
             valor['bo:submercado']['bo:nome'],
             valor['bo:submercado']['bo:codigo'],
             parseFloat(valor['bo:valor']['bo:valor']),
+            unidades.id,
             valor['bo:valor']['bo:codigo'] || 'BRL',
             valor['bo:tipo'] || 'HORARIO',
           );
@@ -187,7 +205,10 @@ export class CceePldService implements ICceePldService {
       const soapResponse = await this.parseXmlToJson(response);
 
       this.logger.debug('Parse XML concluído, convertendo para entidades...');
-      const plds = this.convertToPldEntities(soapResponse);
+      const plds = await this.convertToPldEntities(
+        soapResponse,
+        params.codigoPerfilAgente,
+      );
 
       this.logger.log(
         `Busca concluída. Total de ${plds.length} PLDs encontrados`,

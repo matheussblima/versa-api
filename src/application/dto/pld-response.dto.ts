@@ -32,6 +32,12 @@ export class PldResponseDto {
   valor: number;
 
   @ApiProperty({
+    description: 'ID da unidade',
+    example: 'uuid-da-unidade',
+  })
+  unidadeId: string;
+
+  @ApiProperty({
     description: 'Moeda do valor',
     example: 'BRL',
   })

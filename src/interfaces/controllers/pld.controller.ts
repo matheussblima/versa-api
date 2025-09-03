@@ -72,6 +72,7 @@ export class PldCrudController {
       params.dataFim,
       params.codigoSubmercado,
       params.tipo,
+      params.unidadeId,
       params.page,
       params.limit,
     );

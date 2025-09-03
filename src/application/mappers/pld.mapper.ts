@@ -8,6 +8,7 @@ export class PldMapper {
     submercado: string;
     codigoSubmercado: string;
     valor: number;
+    unidadeId: string;
     moeda: string;
     tipo: string;
   } {
@@ -16,6 +17,7 @@ export class PldMapper {
       submercado: createPldDto.submercado,
       codigoSubmercado: createPldDto.codigoSubmercado,
       valor: createPldDto.valor,
+      unidadeId: createPldDto.unidadeId,
       moeda: createPldDto.moeda || 'BRL',
       tipo: createPldDto.tipo || 'HORARIO',
     };
@@ -28,6 +30,7 @@ export class PldMapper {
       submercado: pld.submercado,
       codigoSubmercado: pld.codigoSubmercado,
       valor: pld.valor,
+      unidadeId: pld.unidadeId,
       moeda: pld.moeda,
       tipo: pld.tipo,
       createdAt: pld.createdAt.toISOString(),

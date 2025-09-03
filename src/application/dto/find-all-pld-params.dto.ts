@@ -43,6 +43,14 @@ export class FindAllPldParamsDto {
   tipo?: string;
 
   @ApiPropertyOptional({
+    description: 'ID da unidade para filtrar PLDs',
+    example: 'uuid-da-unidade',
+  })
+  @IsOptional()
+  @IsString()
+  unidadeId?: string;
+
+  @ApiPropertyOptional({
     description: 'Número da página',
     example: 1,
     minimum: 1,

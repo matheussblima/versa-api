@@ -17,6 +17,7 @@ export class PldRepository implements IPldRepository {
         valor: pld.valor,
         moeda: pld.moeda,
         tipo: pld.tipo,
+        unidadeId: pld.unidadeId,
         createdAt: pld.createdAt,
         updatedAt: pld.updatedAt,
       },
@@ -30,6 +31,7 @@ export class PldRepository implements IPldRepository {
       savedPld.valor,
       savedPld.moeda,
       savedPld.tipo,
+      savedPld.unidadeId,
       savedPld.createdAt,
       savedPld.updatedAt,
     );
@@ -44,6 +46,7 @@ export class PldRepository implements IPldRepository {
       valor: pld.valor,
       moeda: pld.moeda,
       tipo: pld.tipo,
+      unidadeId: pld.unidadeId,
       createdAt: pld.createdAt,
       updatedAt: pld.updatedAt,
     }));
@@ -84,6 +87,7 @@ export class PldRepository implements IPldRepository {
           pld.valor,
           pld.moeda,
           pld.tipo,
+          pld.unidadeId,
           pld.createdAt,
           pld.updatedAt,
         ),
@@ -115,6 +119,7 @@ export class PldRepository implements IPldRepository {
       pld.valor,
       pld.moeda,
       pld.tipo,
+      pld.unidadeId,
       pld.createdAt,
       pld.updatedAt,
     );
@@ -153,6 +158,7 @@ export class PldRepository implements IPldRepository {
       pld.valor,
       pld.moeda,
       pld.tipo,
+      pld.unidadeId,
       pld.createdAt,
       pld.updatedAt,
     );
@@ -163,6 +169,7 @@ export class PldRepository implements IPldRepository {
     dataFim?: Date,
     codigoSubmercado?: string,
     tipo?: string,
+    unidadeId?: string,
     page: number = 1,
     limit: number = 10,
   ): Promise<{ plds: PLD[]; total: number }> {
@@ -184,6 +191,10 @@ export class PldRepository implements IPldRepository {
 
     if (tipo) {
       where.tipo = tipo;
+    }
+
+    if (unidadeId) {
+      where.unidadeId = unidadeId;
     }
 
     const skip = (page - 1) * limit;
@@ -209,6 +220,7 @@ export class PldRepository implements IPldRepository {
             pld.valor,
             pld.moeda,
             pld.tipo,
+            pld.unidadeId,
             pld.createdAt,
             pld.updatedAt,
           ),
@@ -241,6 +253,7 @@ export class PldRepository implements IPldRepository {
       updatedPld.valor,
       updatedPld.moeda,
       updatedPld.tipo,
+      updatedPld.unidadeId,
       updatedPld.createdAt,
       updatedPld.updatedAt,
     );

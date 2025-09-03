@@ -18,6 +18,7 @@ export class FindAllPldUseCase {
     dataFim?: string,
     codigoSubmercado?: string,
     tipo?: string,
+    unidadeId?: string,
     page: number = 1,
     limit: number = 10,
   ): Promise<PldPaginatedResponseDto> {
@@ -29,6 +30,7 @@ export class FindAllPldUseCase {
       dataFimDate,
       codigoSubmercado,
       tipo,
+      unidadeId,
       page,
       limit,
     );

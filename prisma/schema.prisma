@@ -65,6 +65,7 @@ model Unidades {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   subUnidades    SubUnidade[]
+  plds           PLD[]
 
   @@map("unidades")
 }
@@ -105,12 +106,15 @@ model PLD {
   valor              Float
   moeda              String         @default("BRL")
   tipo               String         @default("HORARIO")
+  unidadeId          String
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
+  unidade            Unidades       @relation(fields: [unidadeId], references: [id])
 
   @@unique([dataHora, codigoSubmercado, tipo])
   @@index([dataHora])
   @@index([codigoSubmercado])
   @@index([tipo])
+  @@index([unidadeId])
   @@map("pld")
 }
