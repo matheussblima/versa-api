@@ -39,6 +39,13 @@ import { FindMedidaQuinzeMinutosByIdUseCase } from './use-cases/medida-quinze-mi
 import { UpdateMedidaQuinzeMinutosUseCase } from './use-cases/medida-quinze-minutos/update-medida-quinze-minutos.use-case';
 import { DeleteMedidaQuinzeMinutosUseCase } from './use-cases/medida-quinze-minutos/delete-medida-quinze-minutos.use-case';
 import { FetchMedidasQuinzeMinutosSyncUseCase } from './use-cases/medida-quinze-minutos/fetch-medidas-quinze-minutos-sync.use-case';
+import { CreatePldUseCase } from './use-cases/pld/create-pld.use-case';
+import { FindAllPldUseCase } from './use-cases/pld/find-all-pld.use-case';
+import { FindPldByIdUseCase } from './use-cases/pld/find-pld-by-id.use-case';
+import { UpdatePldUseCase } from './use-cases/pld/update-pld.use-case';
+import { DeletePldUseCase } from './use-cases/pld/delete-pld.use-case';
+import { FetchPldSyncUseCase } from './use-cases/pld/fetch-pld-sync.use-case';
+import { SearchPldCceeUseCase } from './use-cases/pld/search-pld-ccee.use-case';
 
 @Module({
   imports: [DatabaseModule, HttpModule],
@@ -81,6 +88,13 @@ import { FetchMedidasQuinzeMinutosSyncUseCase } from './use-cases/medida-quinze-
     FindMedidaQuinzeMinutosByIdUseCase,
     UpdateMedidaQuinzeMinutosUseCase,
     DeleteMedidaQuinzeMinutosUseCase,
+    CreatePldUseCase,
+    FindAllPldUseCase,
+    FindPldByIdUseCase,
+    UpdatePldUseCase,
+    DeletePldUseCase,
+    FetchPldSyncUseCase,
+    SearchPldCceeUseCase,
   ],
   exports: [
     CreateUnidadeUseCase,
@@ -121,6 +135,13 @@ import { FetchMedidasQuinzeMinutosSyncUseCase } from './use-cases/medida-quinze-
     FindMedidaQuinzeMinutosByIdUseCase,
     UpdateMedidaQuinzeMinutosUseCase,
     DeleteMedidaQuinzeMinutosUseCase,
+    CreatePldUseCase,
+    FindAllPldUseCase,
+    FindPldByIdUseCase,
+    UpdatePldUseCase,
+    DeletePldUseCase,
+    FetchPldSyncUseCase,
+    SearchPldCceeUseCase,
   ],
 })
 export class ApplicationModule {}

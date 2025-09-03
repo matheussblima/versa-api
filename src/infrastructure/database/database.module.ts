@@ -6,12 +6,14 @@ import { PrismaSubUnidadeRepository } from './repositories/prisma-subunidade.rep
 import { PrismaRegiaoRepository } from './repositories/prisma-regiao.repository';
 import { PrismaEstadoRepository } from './repositories/prisma-estado.repository';
 import { MedidaQuinzeMinutosRepository } from './repositories/medida-quinze-minutos.repository';
+import { PldRepository } from './repositories/pld.repository';
 import { UNIDADE_REPOSITORY } from '../../domain/repositories/unidade.repository.interface';
 import { PONTO_DE_MEDICAO_REPOSITORY } from '../../domain/repositories/ponto-de-medicao.repository.interface';
 import { SUBUNIDADE_REPOSITORY } from '../../domain/repositories/subunidade.repository.interface';
 import { REGIAO_REPOSITORY } from '../../domain/repositories/regiao.repository.interface';
 import { ESTADO_REPOSITORY } from '../../domain/repositories/estado.repository.interface';
 import { MEDIDA_QUINZE_MINUTOS_REPOSITORY } from '../../domain/repositories/medida-quinze-minutos.repository.interface';
+import { PLD_REPOSITORY } from '../../domain/repositories/pld.repository.interface';
 
 @Module({
   providers: [
@@ -40,6 +42,10 @@ import { MEDIDA_QUINZE_MINUTOS_REPOSITORY } from '../../domain/repositories/medi
       provide: MEDIDA_QUINZE_MINUTOS_REPOSITORY,
       useClass: MedidaQuinzeMinutosRepository,
     },
+    {
+      provide: PLD_REPOSITORY,
+      useClass: PldRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -49,6 +55,7 @@ import { MEDIDA_QUINZE_MINUTOS_REPOSITORY } from '../../domain/repositories/medi
     REGIAO_REPOSITORY,
     ESTADO_REPOSITORY,
     MEDIDA_QUINZE_MINUTOS_REPOSITORY,
+    PLD_REPOSITORY,
   ],
 })
 export class DatabaseModule {}

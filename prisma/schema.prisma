@@ -96,3 +96,21 @@ model MedidaQuinzeMinutos {
   @@index([pontoDeMedicaoId, dataHora])
   @@map("medidas_quinze_minutos")
 }
+
+model PLD {
+  id                 String         @id @default(uuid())
+  dataHora           DateTime
+  submercado         String
+  codigoSubmercado   String
+  valor              Float
+  moeda              String         @default("BRL")
+  tipo               String         @default("HORARIO")
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@unique([dataHora, codigoSubmercado, tipo])
+  @@index([dataHora])
+  @@index([codigoSubmercado])
+  @@index([tipo])
+  @@map("pld")
+}

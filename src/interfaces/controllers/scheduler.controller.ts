@@ -8,16 +8,20 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { MedidasDailySchedulerService } from '../../infrastructure/scheduler/medidas-daily-scheduler.service';
+import { PldDailySchedulerService } from '../../infrastructure/scheduler/pld-daily-scheduler.service';
 import {
   FetchMedidasQuinzeMinutosSyncDto,
   FetchMedidasQuinzeMinutosSyncResponseDto,
 } from '../../application/dto/fetch-medidas-quinze-minutos-sync.dto';
+import { FetchPldSyncDto } from '../../application/dto/fetch-pld-sync.dto';
+import { FetchPldSyncResponseDto } from '../../application/dto/fetch-pld-sync-response.dto';
 
 @ApiTags('scheduler')
 @Controller('scheduler')
 export class SchedulerController {
   constructor(
     private readonly medidasDailySchedulerService: MedidasDailySchedulerService,
+    private readonly pldDailySchedulerService: PldDailySchedulerService,
   ) {}
 
   @Post('schedule-medidas')
@@ -75,6 +79,52 @@ export class SchedulerController {
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
           error: `Erro ao agendar busca de medições: ${error.message}`,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('schedule-pld')
+  @ApiOperation({
+    summary: 'Agendar busca de PLD para uma data específica',
+    description:
+      'Permite agendar manualmente a busca de PLD (Preço de Liquidação das Diferenças) para uma data específica',
+  })
+  @ApiBody({
+    type: FetchPldSyncDto,
+    description: 'Dados para agendar a busca de PLD',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Busca realizada com sucesso',
+    type: FetchPldSyncResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erro interno do servidor',
+  })
+  async schedulePld(
+    @Body() dto: FetchPldSyncDto,
+  ): Promise<FetchPldSyncResponseDto> {
+    try {
+      const result =
+        await this.pldDailySchedulerService.scheduleFetchPldForDate(
+          dto.referenceDate,
+          dto.forceUpdate || false,
+          dto.tipo || 'HORARIO',
+        );
+
+      return result;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: `Erro ao agendar busca de PLD: ${error.message}`,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );

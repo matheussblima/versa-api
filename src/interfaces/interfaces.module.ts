@@ -11,6 +11,8 @@ import { MedidaQuinzeMinutosController } from './controllers/medida-quinze-minut
 import { MedidaQuinzeMinutosCrudController } from './controllers/medida-quinze-minutos.controller';
 import { MedidaQuinzeMinutosSyncController } from './controllers/medida-quinze-minutos-sync.controller';
 import { SchedulerController } from './controllers/scheduler.controller';
+import { PldCrudController } from './controllers/pld.controller';
+import { PldCceeController } from './controllers/pld-ccee.controller';
 
 @Module({
   imports: [ApplicationModule, SchedulerModule],
@@ -25,6 +27,8 @@ import { SchedulerController } from './controllers/scheduler.controller';
     MedidaQuinzeMinutosCrudController,
     MedidaQuinzeMinutosSyncController,
     SchedulerController,
+    PldCrudController,
+    PldCceeController,
   ],
 })
 export class InterfacesModule {}
