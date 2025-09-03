@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CceeApiService } from './ccee-api.service';
 import { PLD } from '../../domain/entities/pld.entity';
 import * as xml2js from 'xml2js';
@@ -10,6 +10,8 @@ import {
 
 @Injectable()
 export class CceePldService implements ICceePldService {
+  private readonly logger = new Logger(CceePldService.name);
+
   constructor(private readonly cceeApiService: CceeApiService) {}
 
   private buildSoapEnvelope(params: CceePldParams): string {
@@ -73,49 +75,88 @@ export class CceePldService implements ICceePldService {
     const plds: PLD[] = [];
 
     try {
+      this.logger.debug(
+        'Iniciando conversão da resposta SOAP para entidades PLD',
+      );
+
       const responseData =
         soapResponse['soapenv:Envelope']['soapenv:Body'][
           'bm:listarPLDResponse'
         ];
 
-      if (!responseData || !responseData.plds || !responseData.plds.pld) {
+      this.logger.debug(
+        `ResponseData: ${JSON.stringify(responseData, null, 2)}`,
+      );
+
+      if (!responseData) {
+        this.logger.warn('ResponseData não encontrado');
         return plds;
       }
 
-      const pldArray = Array.isArray(responseData.plds.pld)
-        ? responseData.plds.pld
-        : [responseData.plds.pld];
+      if (!responseData['bm:plds']) {
+        this.logger.warn('bm:plds não encontrado');
+        return plds;
+      }
+
+      if (!responseData['bm:plds']['bm:pld']) {
+        this.logger.warn('bm:pld não encontrado');
+        return plds;
+      }
+
+      const pldArray = Array.isArray(responseData['bm:plds']['bm:pld'])
+        ? responseData['bm:plds']['bm:pld']
+        : [responseData['bm:plds']['bm:pld']];
+
+      this.logger.debug(
+        `Encontrados ${pldArray.length} registros PLD na resposta`,
+      );
 
       for (const pld of pldArray) {
-        if (!pld.vigencia || !pld.valores || !Array.isArray(pld.valores)) {
+        if (!pld['bo:vigencia'] || !pld['bo:valores']) {
+          this.logger.warn('PLD sem vigencia ou valores válidos');
           continue;
         }
 
-        const dataHora = new Date(pld.vigencia.inicio);
+        const dataHora = new Date(pld['bo:vigencia']['bo:inicio']);
+        this.logger.debug(
+          `Processando PLD para data: ${dataHora.toISOString()}`,
+        );
 
-        for (const valor of pld.valores) {
+        const valoresArray = Array.isArray(pld['bo:valores']['bo:valor'])
+          ? pld['bo:valores']['bo:valor']
+          : [pld['bo:valores']['bo:valor']];
+
+        for (const valor of valoresArray) {
           if (
-            !valor.submercado ||
-            !valor.valor ||
-            !valor.submercado.codigo ||
-            !valor.submercado.nome ||
-            !valor.valor.valor
+            !valor['bo:submercado'] ||
+            !valor['bo:valor'] ||
+            !valor['bo:submercado']['bo:codigo'] ||
+            !valor['bo:submercado']['bo:nome'] ||
+            !valor['bo:valor']['bo:valor']
           ) {
+            this.logger.warn('Valor PLD sem dados válidos');
             continue;
           }
 
           const pldEntity = PLD.create(
             dataHora,
-            valor.submercado.nome,
-            valor.submercado.codigo,
-            parseFloat(valor.valor.valor),
-            valor.valor.codigo || 'BRL',
+            valor['bo:submercado']['bo:nome'],
+            valor['bo:submercado']['bo:codigo'],
+            parseFloat(valor['bo:valor']['bo:valor']),
+            valor['bo:valor']['bo:codigo'] || 'BRL',
+            valor['bo:tipo'] || 'HORARIO',
           );
 
           plds.push(pldEntity);
+          this.logger.debug(
+            `PLD criado: ${pldEntity.submercado} - ${pldEntity.valor}`,
+          );
         }
       }
+
+      this.logger.debug(`Total de ${plds.length} entidades PLD criadas`);
     } catch (error) {
+      this.logger.error(`Erro ao converter resposta SOAP: ${error.message}`);
       throw new Error(
         `Erro ao converter resposta SOAP para entidades PLD: ${error.message}`,
       );
@@ -126,6 +167,10 @@ export class CceePldService implements ICceePldService {
 
   async fetchPLD(params: CceePldParams): Promise<PLD[]> {
     try {
+      this.logger.log(
+        `Iniciando busca de PLD para ${params.dataInicio} até ${params.dataFim}`,
+      );
+
       const soapEnvelope = this.buildSoapEnvelope(params);
 
       const response = await this.cceeApiService.post<string>(
@@ -138,11 +183,18 @@ export class CceePldService implements ICceePldService {
         },
       );
 
+      this.logger.debug('Resposta SOAP recebida, fazendo parse...');
       const soapResponse = await this.parseXmlToJson(response);
+
+      this.logger.debug('Parse XML concluído, convertendo para entidades...');
       const plds = this.convertToPldEntities(soapResponse);
 
+      this.logger.log(
+        `Busca concluída. Total de ${plds.length} PLDs encontrados`,
+      );
       return plds;
     } catch (error) {
+      this.logger.error(`Erro ao buscar PLD da CCEE: ${error.message}`);
       throw new Error(`Erro ao buscar PLD da CCEE: ${error.message}`);
     }
   }

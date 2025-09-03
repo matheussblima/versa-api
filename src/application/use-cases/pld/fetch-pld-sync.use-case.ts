@@ -52,7 +52,6 @@ export class FetchPldSyncUseCase {
         throw new Error('CCEE_CODIGO_PERFIL_AGENTE não configurado');
       }
 
-      // Verificar se já existem dados para a data (se não for forceUpdate)
       if (!params.forceUpdate) {
         const existingPlds = await this.pldRepository.findByDataHora(
           new Date(params.referenceDate),
