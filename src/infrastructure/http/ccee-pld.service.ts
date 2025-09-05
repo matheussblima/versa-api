@@ -101,10 +101,6 @@ export class CceePldService implements ICceePldService {
           'bm:listarPLDResponse'
         ];
 
-      this.logger.debug(
-        `ResponseData: ${JSON.stringify(responseData, null, 2)}`,
-      );
-
       if (!responseData) {
         this.logger.warn('ResponseData não encontrado');
         return plds;

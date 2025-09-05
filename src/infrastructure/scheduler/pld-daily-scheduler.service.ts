@@ -8,24 +8,21 @@ export class PldDailySchedulerService {
 
   constructor(private readonly fetchPldSyncUseCase: FetchPldSyncUseCase) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
+  @Cron(process.env.SCHEDULER_CRON ?? CronExpression.EVERY_DAY_AT_MIDNIGHT, {
     name: 'fetch-pld-previous-day',
     timeZone: 'America/Sao_Paulo',
   })
   async scheduleFetchPldPreviousDay() {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const referenceDate = yesterday.toISOString().split('T')[0];
-
-    this.logger.log(
-      `Executando busca automática de PLD para o dia anterior: ${referenceDate}`,
-    );
+    const doisDiasAtras = new Date();
+    doisDiasAtras.setDate(doisDiasAtras.getDate() - 2);
+    doisDiasAtras.setHours(0, 0, 0, 0);
+    const referenceDate = doisDiasAtras.toISOString().split('T')[0];
 
     try {
       const result = await this.fetchPldSyncUseCase.execute({
         referenceDate,
         forceUpdate: false,
-        tipo: 'HORARIO',
+        tipo: process.env.SCHEDULER_PLD_DEFAULT_TIPO ?? 'HORARIO',
       });
 
       this.logger.log(
@@ -46,7 +43,7 @@ export class PldDailySchedulerService {
   async scheduleFetchPldForDate(
     referenceDate: string,
     forceUpdate: boolean = false,
-    tipo: string = 'HORARIO',
+    tipo: string = process.env.SCHEDULER_PLD_DEFAULT_TIPO ?? 'HORARIO',
   ) {
     this.logger.log(
       `Iniciando busca manual de PLD para ${referenceDate}${

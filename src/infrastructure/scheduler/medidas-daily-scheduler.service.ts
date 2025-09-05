@@ -10,18 +10,19 @@ export class MedidasDailySchedulerService {
     private readonly fetchMedidasQuinzeMinutosSyncUseCase: FetchMedidasQuinzeMinutosSyncUseCase,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
+  @Cron(process.env.SCHEDULER_CRON ?? CronExpression.EVERY_DAY_AT_MIDNIGHT, {
     name: 'fetch-measures-previous-day',
     timeZone: 'America/Sao_Paulo',
   })
   async scheduleFetchMeasuresPreviousDay() {
-    const ontem = new Date();
-    ontem.setDate(ontem.getDate() - 1);
+    const doisDiasAtras = new Date();
+    doisDiasAtras.setDate(doisDiasAtras.getDate() - 2);
+    doisDiasAtras.setHours(0, 0, 0, 0);
 
-    const referenceDate = ontem.toISOString();
+    const referenceDate = doisDiasAtras.toISOString();
 
     this.logger.log(
-      `Iniciando busca automática de medições de 15 minutos para o dia anterior: ${referenceDate}`,
+      `Iniciando busca automática de medições de 15 minutos para dois dias atrás: ${referenceDate}`,
     );
 
     try {
